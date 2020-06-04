@@ -13,55 +13,56 @@ var getRandomElement = function (arrayWithElements) {
   return arrayWithElements[randomIndex];
 };
 
-var createAuthor = function () {
-  var author = {
-    avatar: 'img/avatars/user0' + getRandomInRange(1, 8)
-  };
+var getArrayWithRandomElements = function (originalArray) {
+  var newArray = [];
 
-  return author;
+  for (var i = 0; i <= getRandomInRange(1, originalArray.length); i++) {
+    var randomIndex = Math.floor(Math.random() * originalArray.length);
+    var randomElement = originalArray[randomIndex];
+    newArray.push(randomElement);
+    originalArray.splice(randomIndex, 1);
+  }
+
+  return newArray;
 };
 
-var createOffer = function () {
+var getOffer = function () {
   var locationX = getRandomInRange(1, 1000);
   var locationY = getRandomInRange(1, 1000);
 
-  var offer = {
-    title: 'Заголовок предложения',
-    address: locationX + ', ' + locationY,
-    price: '5000',
-    type: getRandomElement(typeArray),
-    rooms: getRandomInRange(1, 4),
-    guests: getRandomInRange(1, 10),
-    checkin: getRandomElement(timeArray),
-    checkout: getRandomElement(timeArray),
-    features: getRandomElement(featuresArray),
-    description: 'Описание предложения',
-    photos: 'http://o0.github.io/assets/images/tokyo/hotel' + getRandomInRange(1, 3) + '.jpg'
+  var offerMap = {
+    author: {
+      avatar: 'img/avatars/user0' + getRandomInRange(1, 8)
+    },
+    offer: {
+      title: 'Заголовок предложения',
+      address: locationX + ', ' + locationY,
+      price: '5000',
+      type: getRandomElement(typeArray),
+      rooms: getRandomInRange(1, 4),
+      guests: getRandomInRange(1, 10),
+      checkin: getRandomElement(timeArray),
+      checkout: getRandomElement(timeArray),
+      features: getArrayWithRandomElements(featuresArray),
+      description: 'Описание предложения',
+      photos: 'http://o0.github.io/assets/images/tokyo/hotel' + getRandomInRange(1, 3) + '.jpg'
+    },
+    location: {
+      x: getRandomInRange(1, 1000),
+      y: getRandomInRange(130, 630)
+    }
   };
 
-  return offer;
+  return offerMap;
 };
 
-var createLocation = function () {
-  var location = {
-    x: getRandomInRange(1, 100),
-    y: getRandomInRange(1, 100)
-  };
-
-  return location;
-};
-
-// console.log(createAuthor());
-// console.log(createOffer());
-// console.log(createLocation());
+console.log(getOffer());
 
 var generateArray = function () {
   var array = [];
 
-  for (var i = 0; i <= 8; i++) {
-    array.push(createAuthor());
-    array.push(createOffer());
-    array.push(createLocation());
+  for (var i = 0; i <= 7; i++) {
+    array.push(getOffer());
   }
 
   return array;
@@ -69,7 +70,11 @@ var generateArray = function () {
 
 generateArray();
 
-// console.log(generateArray());
+console.log(generateArray());
 
 var mapBlock = document.querySelector('.map');
 mapBlock.classList.remove('map--faded');
+
+var mapDomPin = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');

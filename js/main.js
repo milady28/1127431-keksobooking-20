@@ -69,8 +69,8 @@ var generateArray = function () {
   return array;
 };
 
-var renderMapPin = function (pin) {
-  var mapPinElement = mapPin.cloneNode(true);
+var renderMapPin = function (pin, template) {
+  var mapPinElement = template.cloneNode(true);
 
   mapPinElement.style.left = pin.location.x + OFFSET_BY_X + 'px';
   mapPinElement.style.top = pin.location.y - OFFSET_BY_Y + 'px';
@@ -78,6 +78,16 @@ var renderMapPin = function (pin) {
   mapPinElement.querySelector('img').alt = pin.offer.title;
 
   return mapPinElement;
+};
+
+var createElements = function () {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < generateArray().length; i++) {
+    fragment.appendChild(renderMapPin((generateArray()[i]), mapPin));
+  }
+
+  return fragment;
 };
 
 var mapBlock = document.querySelector('.map');
@@ -88,16 +98,6 @@ var mapPinsBlock = mapBlock.querySelector('.map__pins');
 var mapPin = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
-
-var createElements = function () {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < generateArray().length; i++) {
-    fragment.appendChild(renderMapPin(generateArray()[i]));
-  }
-
-  return fragment;
-};
 
 mapPinsBlock.appendChild(createElements());
 

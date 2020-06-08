@@ -80,11 +80,11 @@ var renderMapPin = function (pin, template) {
   return mapPinElement;
 };
 
-var createElements = function () {
+var createElements = function (array, template) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < generateArray().length; i++) {
-    fragment.appendChild(renderMapPin((generateArray()[i]), mapPin));
+  for (var i = 0; i < array.length; i++) {
+    fragment.appendChild(renderMapPin(array[i], template));
   }
 
   return fragment;
@@ -99,5 +99,5 @@ var mapPin = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-mapPinsBlock.appendChild(createElements());
+mapPinsBlock.appendChild(createElements(generateArray(), mapPin));
 

@@ -20,7 +20,7 @@ var getArrayWithRandomElements = function (originalArray) {
     var randomIndex = Math.floor(Math.random() * originalArray.length);
     var randomElement = originalArray[randomIndex];
     newArray.push(randomElement);
-    originalArray.splice(randomIndex, 1);
+    // originalArray.splice(randomIndex, 1);
   }
 
   return newArray;
@@ -56,8 +56,6 @@ var getOffer = function () {
   return offerMap;
 };
 
-console.log(getOffer());
-
 var generateArray = function () {
   var array = [];
 
@@ -70,11 +68,5 @@ var generateArray = function () {
 
 generateArray();
 
-console.log(generateArray());
-
 var mapBlock = document.querySelector('.map');
 mapBlock.classList.remove('map--faded');
-
-var mapDomPin = document.querySelector('#pin')
-    .content
-    .querySelector('.map__pin');

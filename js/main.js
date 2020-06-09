@@ -80,11 +80,38 @@ var renderMapPin = function (pin, template) {
   return mapPinElement;
 };
 
-var createElements = function (array, template) {
+var renderMapCard = function (card, template) {
+  var mapCardElement = template.cloneNode(true);
+
+  mapCardElement.querySelector('.popup__title').textContent = card.offer.title;
+  mapCardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+  mapCardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
+  mapCardElement.querySelector('.popup__type').textContent = card.offer.type;
+  mapCardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+  mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ' , выезд до ' + card.offer.checkout;
+  // mapCardElement.querySelector('.popup__feature').textContent = card.offer.type;
+  mapCardElement.querySelector('.popup__description').textContent = card.offer.description;
+  mapCardElement.querySelector('.popup__photos > img').src = card.offer.photos;
+  mapCardElement.querySelector('.popup__avatar').src = card.author.avatar;
+
+  return mapCardElement;
+};
+
+var createMapPins = function (array, template) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < array.length; i++) {
     fragment.appendChild(renderMapPin(array[i], template));
+  }
+
+  return fragment;
+};
+
+var createMapCards = function (array, template) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < array.length; i++) {
+    fragment.appendChild(renderMapCard(array[i], template));
   }
 
   return fragment;
@@ -99,5 +126,12 @@ var mapPin = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-mapPinsBlock.appendChild(createElements(generateArray(), mapPin));
+var offerCard = document.querySelector('#card')
+    .content
+    .querySelector('.map__card');
 
+var mapFiltersContainer = document.querySelector('.map__filters-container');
+
+mapPinsBlock.appendChild(createMapPins(generateArray(), mapPin));
+
+mapBlock.insertBefore(createMapCards(generateArray(), offerCard), mapFiltersContainer);

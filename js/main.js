@@ -69,8 +69,19 @@ var generateArray = function () {
   return array;
 };
 
-// var offerFeatureBlock = document.querySelector('.popup__features');
-// var offerFeatures = document.querySelectorAll('.popup__feature');
+var getTypeValue = function (type) {
+  if (type === 'palace') {
+    type = 'Дворец';
+  } if (type === 'flat') {
+    type = 'Квартира';
+  } if (type === 'house') {
+    type = 'Дом';
+  } if (type === 'bungalo') {
+    type = 'Бунгало';
+  }
+
+  return type;
+};
 
 var deleteChildElements = function (block) {
   while (block.firstChild) {
@@ -81,7 +92,7 @@ var deleteChildElements = function (block) {
 var getOfferFeatures = function (array, block) {
   deleteChildElements(block);
 
-  for (var i = 0; i <= array.length; i++) {
+  for (var i = 0; i < array.length; i++) {
     var newFeature = document.createElement('li');
     newFeature.className = 'popup__feature';
     var classFeatureElement = 'popup__feature--' + array[i];
@@ -108,15 +119,13 @@ var renderMapCard = function (card, template) {
   mapCardElement.querySelector('.popup__title').textContent = card.offer.title;
   mapCardElement.querySelector('.popup__text--address').textContent = card.offer.address;
   mapCardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
-  mapCardElement.querySelector('.popup__type').textContent = card.offer.type;
+  mapCardElement.querySelector('.popup__type').textContent = getTypeValue(card.offer.type);
   mapCardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
   mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ' , выезд до ' + card.offer.checkout;
-  // mapCardElement.querySelector('.popup__feature').appendChild(getOfferFeatures(card.offer.features));
   mapCardElement.querySelector('.popup__description').textContent = card.offer.description;
   mapCardElement.querySelector('.popup__photos > img').src = card.offer.photos;
   mapCardElement.querySelector('.popup__avatar').src = card.author.avatar;
-  var arrayFeatures = card.offer.features;
-  getOfferFeatures(arrayFeatures, mapCardElement.querySelector('.popup__features'));
+  getOfferFeatures(card.offer.features, mapCardElement.querySelector('.popup__features'));
 
   return mapCardElement;
 };

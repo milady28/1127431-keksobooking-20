@@ -70,14 +70,19 @@ var generateArray = function () {
 };
 
 var getTypeValue = function (type) {
-  if (type === 'palace') {
-    type = 'Дворец';
-  } if (type === 'flat') {
-    type = 'Квартира';
-  } if (type === 'house') {
-    type = 'Дом';
-  } if (type === 'bungalo') {
-    type = 'Бунгало';
+  switch (type) {
+    case 'palace':
+      type = 'Дворец';
+      break;
+    case 'flat':
+      type = 'Квартира';
+      break;
+    case 'house':
+      type = 'Дом';
+      break;
+    case 'bungalo':
+      type = 'Бунгало';
+      break;
   }
 
   return type;
@@ -89,17 +94,18 @@ var deleteChildElements = function (block) {
   }
 };
 
-var getOfferFeatures = function (array, block) {
-  deleteChildElements(block);
+var getOfferFeatures = function (array) {
+  var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < array.length; i++) {
     var newFeature = document.createElement('li');
     newFeature.className = 'popup__feature';
     var classFeatureElement = 'popup__feature--' + array[i];
     newFeature.classList.add(classFeatureElement);
-
-    block.appendChild(newFeature);
+    fragment.appendChild(newFeature);
   }
+
+  return fragment;
 };
 
 var renderMapPin = function (pin, template) {
@@ -125,7 +131,10 @@ var renderMapCard = function (card, template) {
   mapCardElement.querySelector('.popup__description').textContent = card.offer.description;
   mapCardElement.querySelector('.popup__photos > img').src = card.offer.photos;
   mapCardElement.querySelector('.popup__avatar').src = card.author.avatar;
-  getOfferFeatures(card.offer.features, mapCardElement.querySelector('.popup__features'));
+
+  deleteChildElements(mapCardElement.querySelector('.popup__features'));
+  var fragmentOfferFeatures = getOfferFeatures(card.offer.features);
+  mapCardElement.querySelector('.popup__features').appendChild(fragmentOfferFeatures);
 
   return mapCardElement;
 };

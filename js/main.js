@@ -150,16 +150,6 @@ var createMapPins = function (array, template) {
   return fragment;
 };
 
-var createMapCards = function (array, template) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < array.length; i++) {
-    fragment.appendChild(renderMapCard(array[i], template));
-  }
-
-  return fragment;
-};
-
 var mapBlock = document.querySelector('.map');
 mapBlock.classList.remove('map--faded');
 
@@ -179,4 +169,4 @@ var offersArray = generateArray();
 
 mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
 
-mapBlock.insertBefore(createMapCards(offersArray, offerCard), mapFiltersContainer);
+mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);

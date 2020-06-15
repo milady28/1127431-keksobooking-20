@@ -175,6 +175,8 @@ var offerCard = document.querySelector('#card')
 
 var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-mapPinsBlock.appendChild(createMapPins(generateArray(), mapPin));
+var offersArray = generateArray();
 
-mapBlock.insertBefore(createMapCards(generateArray(), offerCard), mapFiltersContainer);
+mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
+
+mapBlock.insertBefore(createMapCards(offersArray, offerCard), mapFiltersContainer);

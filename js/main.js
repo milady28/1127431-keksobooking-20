@@ -69,6 +69,45 @@ var generateArray = function () {
   return array;
 };
 
+var getTypeValue = function (type) {
+  switch (type) {
+    case 'palace':
+      type = 'Дворец';
+      break;
+    case 'flat':
+      type = 'Квартира';
+      break;
+    case 'house':
+      type = 'Дом';
+      break;
+    case 'bungalo':
+      type = 'Бунгало';
+      break;
+  }
+
+  return type;
+};
+
+var deleteChildElements = function (block) {
+  while (block.firstChild) {
+    block.removeChild(block.firstChild);
+  }
+};
+
+var getOfferFeatures = function (array) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < array.length; i++) {
+    var newFeature = document.createElement('li');
+    newFeature.className = 'popup__feature';
+    var classFeatureElement = 'popup__feature--' + array[i];
+    newFeature.classList.add(classFeatureElement);
+    fragment.appendChild(newFeature);
+  }
+
+  return fragment;
+};
+
 var renderMapPin = function (pin, template) {
   var mapPinElement = template.cloneNode(true);
 
@@ -80,7 +119,28 @@ var renderMapPin = function (pin, template) {
   return mapPinElement;
 };
 
-var createElements = function (array, template) {
+var renderMapCard = function (card, template) {
+  var mapCardElement = template.cloneNode(true);
+
+  mapCardElement.querySelector('.popup__title').textContent = card.offer.title;
+  mapCardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+  mapCardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
+  mapCardElement.querySelector('.popup__type').textContent = getTypeValue(card.offer.type);
+  mapCardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+  mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ' , выезд до ' + card.offer.checkout;
+  mapCardElement.querySelector('.popup__description').textContent = card.offer.description;
+  mapCardElement.querySelector('.popup__photos > img').src = card.offer.photos;
+  mapCardElement.querySelector('.popup__avatar').src = card.author.avatar;
+
+  var featuresBlock = mapCardElement.querySelector('.popup__features');
+  deleteChildElements(featuresBlock);
+  var fragmentOfferFeatures = getOfferFeatures(card.offer.features);
+  featuresBlock.appendChild(fragmentOfferFeatures);
+
+  return mapCardElement;
+};
+
+var createMapPins = function (array, template) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < array.length; i++) {
@@ -99,5 +159,14 @@ var mapPin = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-mapPinsBlock.appendChild(createElements(generateArray(), mapPin));
+var offerCard = document.querySelector('#card')
+    .content
+    .querySelector('.map__card');
 
+var mapFiltersContainer = document.querySelector('.map__filters-container');
+
+var offersArray = generateArray();
+
+mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
+
+mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);

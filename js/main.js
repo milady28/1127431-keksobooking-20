@@ -132,9 +132,10 @@ var renderMapCard = function (card, template) {
   mapCardElement.querySelector('.popup__photos > img').src = card.offer.photos;
   mapCardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
-  deleteChildElements(mapCardElement.querySelector('.popup__features'));
+  var featuresBlock = mapCardElement.querySelector('.popup__features');
+  deleteChildElements(featuresBlock);
   var fragmentOfferFeatures = getOfferFeatures(card.offer.features);
-  mapCardElement.querySelector('.popup__features').appendChild(fragmentOfferFeatures);
+  featuresBlock.appendChild(fragmentOfferFeatures);
 
   return mapCardElement;
 };

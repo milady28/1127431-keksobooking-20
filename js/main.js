@@ -165,22 +165,17 @@ var onActiveMode = function () {
   var roomNumberSelect = adFormBlock.querySelector('#room_number');
   var capacitySelect = adFormBlock.querySelector('#capacity');
 
-  capacitySelect.addEventListener('input', function () {
-    var roomNumberValue = roomNumberSelect.value;
-    var capacityValue = capacitySelect.value;
-
-    if (roomNumberValue === 1 && capacityValue != 1) {
-      capacitySelect.setCustomValidity('Количество гостей не должно превышать ' + roomNumberValue);
-    } else if (roomNumberValue === 2 && (capacityValue != 1 && capacityValue != 2)) {
-      capacitySelect.setCustomValidity('Количество гостей не должно превышать ' + roomNumberValue);
-    } else if (roomNumberValue === 3 && (capacityValue === 2)) {
-      capacitySelect.setCustomValidity('Выберите количество гостей от 1 до 3х');
-    } else if (roomNumberValue === 0 && (capacityValue != 0)) {
-      capacitySelect.setCustomValidity('Столько комнат не для гостей!');
-    } else {
-      capacitySelect.setCustomValidity('');
+  roomNumberSelect.addEventListener('onchange', function () {
+    if (this.value === 1) {
+      // capacitySelect.value = 1;
     }
   });
+};
+
+var addDisabledAttribute = function (collect) {
+  for (var i = 0; i < collect.length; i++) {
+    collect[i].disabled = true;
+  }
 };
 
 var mapBlock = document.querySelector('.map');
@@ -204,13 +199,15 @@ var offersArray = generateArray();
 // mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);
 
 var adFormBlock = document.querySelector('.ad-form');
-var allFieldset = adFormBlock.querySelectorAll('fieldset');
+var allFieldsetAdForm = adFormBlock.querySelectorAll('fieldset');
 
 var mapFiltersForm = document.querySelector('.map__filters');
+var allFieldsetFiltersForm = mapFiltersForm.querySelectorAll('fieldset');
+var allSelectFiltersForm = mapFiltersForm.querySelectorAll('select');
 
-for (var i = 0; i < allFieldset.length; i++) {
-  allFieldset[i].disabled = true;
-};
+// addDisabledAttribute(allFieldsetAdForm);
+// addDisabledAttribute(allFieldsetFiltersForm);
+// addDisabledAttribute(allSelectFiltersForm);
 
 var mainMapPin = document.querySelector('.map__pin--main');
 
@@ -230,5 +227,3 @@ mainMapPin.addEventListener('keydown', function (evt) {
 var addressInput = adFormBlock.querySelector('#address');
 
 addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN / 2));
-
-

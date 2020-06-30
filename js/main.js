@@ -156,6 +156,10 @@ var onActiveMode = function () {
   mapBlock.classList.remove('map--faded');
   adFormBlock.classList.remove('ad-form--disabled');
 
+  mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
+
+  mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);
+
   removeDisabledAttribute(allFieldsetAdForm);
   removeDisabledAttribute(allFieldsetFiltersForm);
   removeDisabledAttribute(allSelectFiltersForm);
@@ -164,54 +168,22 @@ var onActiveMode = function () {
 
   var roomNumberSelect = adFormBlock.querySelector('#room_number');
   var capacitySelect = adFormBlock.querySelector('#capacity');
-  // var capacityOptions = capacitySelect.querySelectorAll('option');
-  // console.log(capacitySelect.value);
 
-  // addDisabledAttribute(capacitySelect.children);
-  // capacitySelect.children[capacitySelect.value = 1].disabled = false;
-  // capacitySelect.children[capacitySelect.value = 1].selected = false;
+  var choices = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0'],
+  };
 
-  roomNumberSelect.addEventListener('change', function (evt) {
-    for (var i = 0; i < capacitySelect.children.length; i++) {
-      capacitySelect.children[i].disabled = true;
+  roomNumberSelect.addEventListener('change', function () {
+    var selectedRooms = roomNumberSelect.value;
+    var guestsAvailable = choices[selectedRooms];
 
-      if (this.value === '1') {
-        if (capacitySelect.value === '1') {
-          capacitySelect.children[i].disabled = false;
-        } else {
-          capacitySelect.children[i].disabled = true;
-        }
-      }
-
-      if (this.value === '2') {
-        if (capacitySelect.value === '2' || capacitySelect.value === '1') {
-          capacitySelect.children[i].disabled = false;
-        } else {
-          capacitySelect.children[i].disabled = true;
-        }
-      }
-
-      if (this.value === '3') {
-        if (capacitySelect.value === '3' || capacitySelect.value === '2' || capacitySelect.value === '1') {
-          capacitySelect.children[i].disabled = false;
-        } else {
-          capacitySelect.children[i].disabled = true;
-        }
-      }
-
-      if (this.value === '100') {
-        if (capacitySelect.value === '0') {
-          capacitySelect.children[i].disabled = false;
-        } else {
-          capacitySelect.children[i].disabled = true;
-        }
-      }
-
-    }
-
-    var currentVal = this.value;
-    // var currentVal2 = roomNumberSelect.value;
-
+    Array.from(capacitySelect.children).forEach(function (option) {
+      option.disabled = !guestsAvailable.includes(option.value);
+      option.selected = !option.disabled;
+    });
   });
 };
 
@@ -241,10 +213,6 @@ var offerCard = document.querySelector('#card')
 var mapFiltersContainer = document.querySelector('.map__filters-container');
 
 var offersArray = generateArray();
-
-// mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
-
-// mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);
 
 var adFormBlock = document.querySelector('.ad-form');
 var allFieldsetAdForm = adFormBlock.querySelectorAll('fieldset');

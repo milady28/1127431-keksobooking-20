@@ -4,8 +4,9 @@ var TYPE_ARRAY = ['palace', 'flat', 'house', 'bungalo'];
 var TIME_ARRAY = ['12:00', '13:00', '14:00'];
 var FEATURES_ARRAY = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var WIDTH_MAP = 947.5;
-var OFFSET_BY_X = 32.5;
-var OFFSET_BY_Y = 65;
+var WIDTH_MAP_PIN = 62;
+var HEIGHT_MAP_PIN = 62;
+var HEIGHT_OFFSET = 22;
 
 var getRandomInRange = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -111,8 +112,8 @@ var getOfferFeatures = function (array) {
 var renderMapPin = function (pin, template) {
   var mapPinElement = template.cloneNode(true);
 
-  mapPinElement.style.left = pin.location.x + OFFSET_BY_X + 'px';
-  mapPinElement.style.top = pin.location.y - OFFSET_BY_Y + 'px';
+  mapPinElement.style.left = pin.location.x + (WIDTH_MAP_PIN / 2) + 'px';
+  mapPinElement.style.top = pin.location.y - (HEIGHT_OFFSET + HEIGHT_MAP_PIN) + 'px';
   mapPinElement.querySelector('img').src = pin.author.avatar;
   mapPinElement.querySelector('img').alt = pin.offer.title;
 
@@ -134,6 +135,7 @@ var renderMapCard = function (card, template) {
 
   var featuresBlock = mapCardElement.querySelector('.popup__features');
   deleteChildElements(featuresBlock);
+
   var fragmentOfferFeatures = getOfferFeatures(card.offer.features);
   featuresBlock.appendChild(fragmentOfferFeatures);
 
@@ -150,8 +152,53 @@ var createMapPins = function (array, template) {
   return fragment;
 };
 
+var onActiveMode = function () {
+  mapBlock.classList.remove('map--faded');
+  adFormBlock.classList.remove('ad-form--disabled');
+
+  mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
+
+  mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);
+
+  removeDisabledAttribute(allFieldsetAdForm);
+  removeDisabledAttribute(allFieldsetFiltersForm);
+  removeDisabledAttribute(allSelectFiltersForm);
+
+  addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN + HEIGHT_OFFSET));
+
+  var roomNumberSelect = adFormBlock.querySelector('#room_number');
+  var capacitySelect = adFormBlock.querySelector('#capacity');
+
+  var choices = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0'],
+  };
+
+  roomNumberSelect.addEventListener('change', function () {
+    var selectedRooms = roomNumberSelect.value;
+    var guestsAvailable = choices[selectedRooms];
+
+    Array.from(capacitySelect.children).forEach(function (option) {
+      option.disabled = !guestsAvailable.includes(option.value);
+      option.selected = !option.disabled;
+    });
+  });
+};
+
+var addDisabledAttribute = function (collect) {
+  for (var i = 0; i < collect.length; i++) {
+    collect[i].disabled = true;
+  }
+};
+var removeDisabledAttribute = function (collect) {
+  for (var i = 0; i < collect.length; i++) {
+    collect[i].disabled = false;
+  }
+};
+
 var mapBlock = document.querySelector('.map');
-mapBlock.classList.remove('map--faded');
 
 var mapPinsBlock = mapBlock.querySelector('.map__pins');
 
@@ -167,6 +214,32 @@ var mapFiltersContainer = document.querySelector('.map__filters-container');
 
 var offersArray = generateArray();
 
-mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
+var adFormBlock = document.querySelector('.ad-form');
+var allFieldsetAdForm = adFormBlock.querySelectorAll('fieldset');
 
-mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);
+var mapFiltersForm = document.querySelector('.map__filters');
+var allFieldsetFiltersForm = mapFiltersForm.querySelectorAll('fieldset');
+var allSelectFiltersForm = mapFiltersForm.querySelectorAll('select');
+
+addDisabledAttribute(allFieldsetAdForm);
+addDisabledAttribute(allFieldsetFiltersForm);
+addDisabledAttribute(allSelectFiltersForm);
+
+var mainMapPin = document.querySelector('.map__pin--main');
+
+mainMapPin.addEventListener('mousedown', function (evt) {
+  var buttonPressed = evt.button;
+  if (buttonPressed === 0) {
+    onActiveMode();
+  }
+});
+
+mainMapPin.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    onActiveMode();
+  }
+});
+
+var addressInput = adFormBlock.querySelector('#address');
+
+addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN / 2));

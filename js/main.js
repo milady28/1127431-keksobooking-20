@@ -120,23 +120,23 @@ var renderMapPin = function (pin, template) {
   return mapPinElement;
 };
 
-var renderMapCard = function (card, template) {
+var renderMapCard = function (template) {
   var mapCardElement = template.cloneNode(true);
 
-  mapCardElement.querySelector('.popup__title').textContent = card.offer.title;
-  mapCardElement.querySelector('.popup__text--address').textContent = card.offer.address;
-  mapCardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
-  mapCardElement.querySelector('.popup__type').textContent = getTypeValue(card.offer.type);
-  mapCardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
-  mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ' , выезд до ' + card.offer.checkout;
-  mapCardElement.querySelector('.popup__description').textContent = card.offer.description;
-  mapCardElement.querySelector('.popup__photos > img').src = card.offer.photos;
-  mapCardElement.querySelector('.popup__avatar').src = card.author.avatar;
+  mapCardElement.querySelector('.popup__title').textContent = getOffer().offer.title;
+  mapCardElement.querySelector('.popup__text--address').textContent = getOffer().offer.address;
+  mapCardElement.querySelector('.popup__text--price').textContent = getOffer().offer.price + '₽/ночь';
+  mapCardElement.querySelector('.popup__type').textContent = getTypeValue(getOffer().offer.type);
+  mapCardElement.querySelector('.popup__text--capacity').textContent = getOffer().offer.rooms + ' комнаты для ' + getOffer().offer.guests + ' гостей';
+  mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + getOffer().offer.checkin + ' , выезд до ' + getOffer().offer.checkout;
+  mapCardElement.querySelector('.popup__description').textContent = getOffer().offer.description;
+  mapCardElement.querySelector('.popup__photos > img').src = getOffer().offer.photos;
+  mapCardElement.querySelector('.popup__avatar').src = getOffer().author.avatar;
 
   var featuresBlock = mapCardElement.querySelector('.popup__features');
   deleteChildElements(featuresBlock);
 
-  var fragmentOfferFeatures = getOfferFeatures(card.offer.features);
+  var fragmentOfferFeatures = getOfferFeatures(getOffer().offer.features);
   featuresBlock.appendChild(fragmentOfferFeatures);
 
   return mapCardElement;
@@ -152,13 +152,19 @@ var createMapPins = function (array, template) {
   return fragment;
 };
 
+var createMapCard = function (template) {
+  var fragment = document.createDocumentFragment();
+
+  fragment.appendChild(renderMapCard(template));
+
+  return fragment;
+};
+
 var onActiveMode = function () {
   mapBlock.classList.remove('map--faded');
   adFormBlock.classList.remove('ad-form--disabled');
 
   mapPinsBlock.appendChild(createMapPins(offersArray, mapPin));
-
-  mapBlock.insertBefore(renderMapCard(offersArray[0], offerCard), mapFiltersContainer);
 
   removeDisabledAttribute(allFieldsetAdForm);
   removeDisabledAttribute(allFieldsetFiltersForm);
@@ -169,7 +175,7 @@ var onActiveMode = function () {
   var roomNumberSelect = adFormBlock.querySelector('#room_number');
   var capacitySelect = adFormBlock.querySelector('#capacity');
 
-  var choices = {
+  var CHOICES = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
@@ -178,12 +184,66 @@ var onActiveMode = function () {
 
   roomNumberSelect.addEventListener('change', function () {
     var selectedRooms = roomNumberSelect.value;
-    var guestsAvailable = choices[selectedRooms];
+    var guestsAvailable = CHOICES[selectedRooms];
 
     Array.from(capacitySelect.children).forEach(function (option) {
       option.disabled = !guestsAvailable.includes(option.value);
       option.selected = !option.disabled;
     });
+  });
+
+  var offerPrice = adFormBlock.querySelector('#price');
+  var housingType = adFormBlock.querySelector('#type');
+
+  var MIN_PRICE = {
+    'bungalo': '0',
+    'flat': '1000',
+    'house': '5000',
+    'palace': '10000',
+  };
+
+  housingType.addEventListener('change', function () {
+    var type = housingType.value;
+    var minPrice = MIN_PRICE[type];
+
+    offerPrice.setAttribute('min', minPrice);
+  });
+
+  var adTimeBlock = adFormBlock.querySelector('.ad-form__element--time');
+  var offerTimeIn = adFormBlock.querySelector('#timein');
+  var offerTimeOut = adFormBlock.querySelector('#timeout');
+
+  adTimeBlock.addEventListener('change', function (evt) {
+    offerTimeIn.value = evt.target.value;
+    offerTimeOut.value = evt.target.value;
+  });
+
+  var mapPins = mapBlock.querySelectorAll('.map__pin');
+
+  for (var i = 1; i < mapPins.length; i++) {
+    mapPins[i].addEventListener('click', function (evt) {
+      evt.preventDefault();
+      if (mapBlock.querySelector('.map__card')) {
+        mapBlock.removeChild(mapBlock.querySelector('.map__card'));
+        mapBlock.insertBefore(createMapCard(offerCard), mapFiltersContainer);
+      } else {
+        mapBlock.insertBefore(createMapCard(offerCard), mapFiltersContainer);
+      }
+
+      var popupBtnClose = mapBlock.querySelector('.popup__close');
+
+      popupBtnClose.addEventListener('click', function (evt1) {
+        evt1.preventDefault();
+        mapBlock.removeChild(mapBlock.querySelector('.map__card'));
+      });
+    });
+  }
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      mapBlock.removeChild(mapBlock.querySelector('.map__card'));
+    }
   });
 };
 
@@ -192,6 +252,7 @@ var addDisabledAttribute = function (collect) {
     collect[i].disabled = true;
   }
 };
+
 var removeDisabledAttribute = function (collect) {
   for (var i = 0; i < collect.length; i++) {
     collect[i].disabled = false;

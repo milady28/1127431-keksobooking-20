@@ -166,13 +166,6 @@ var createMapPins = function (array, template) {
   return fragment;
 };
 
-var onPopupEscPress = function (evt) {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    mapBlock.removeChild(mapBlock.querySelector('.map__card'));
-  }
-};
-
 var handleEventClickOnMapPin = function (array, element) {
   array.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -184,14 +177,21 @@ var handleEventClickOnMapPin = function (array, element) {
 
     mapBlock.insertBefore(renderMapCard(element, offerCard), mapFiltersContainer);
 
+    var popup = mapBlock.querySelector('.popup');
+
+    var onPopupEscPress = function (evt1) {
+      if (evt1.key === 'Escape') {
+        evt1.preventDefault();
+        mapBlock.removeChild(popup);
+      }
+    };
+
     document.addEventListener('keydown', onPopupEscPress);
 
     var popupBtnClose = mapBlock.querySelector('.popup__close');
 
-    popupBtnClose.addEventListener('click', function (evt1) {
-      var popup = mapBlock.querySelector('.popup');
-
-      evt1.preventDefault();
+    popupBtnClose.addEventListener('click', function (evt2) {
+      evt2.preventDefault();
       mapBlock.removeChild(popup);
 
       document.removeEventListener('keydown', onPopupEscPress);

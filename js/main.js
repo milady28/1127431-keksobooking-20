@@ -166,7 +166,7 @@ var createMapPins = function (array, template) {
   return fragment;
 };
 
-var closure = function (array, element) {
+var handleEventClickOnMapPin = function (array, element) {
   array.addEventListener('click', function (evt) {
     evt.preventDefault();
     var mapCard = mapBlock.querySelector('.map__card');
@@ -233,7 +233,7 @@ var onActiveMode = function () {
   var mapPins = mapBlock.querySelectorAll('.map__pin');
 
   for (var i = 1; i < mapPins.length; i++) {
-    closure(mapPins[i], offersArray[i - 1]);
+    handleEventClickOnMapPin(mapPins[i], offersArray[i - 1]);
   }
 
   document.addEventListener('keydown', function (evt) {

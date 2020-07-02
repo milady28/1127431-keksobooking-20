@@ -182,8 +182,14 @@ var handleEventClickOnMapPin = function (array, element) {
     var onPopupEscPress = function (evt1) {
       if (evt1.key === 'Escape') {
         evt1.preventDefault();
-        mapBlock.removeChild(popup);
+        closePopup();
       }
+    };
+
+    var closePopup = function () {
+      mapBlock.removeChild(popup);
+
+      document.removeEventListener('keydown', onPopupEscPress);
     };
 
     document.addEventListener('keydown', onPopupEscPress);
@@ -192,9 +198,7 @@ var handleEventClickOnMapPin = function (array, element) {
 
     popupBtnClose.addEventListener('click', function (evt2) {
       evt2.preventDefault();
-      mapBlock.removeChild(popup);
-
-      document.removeEventListener('keydown', onPopupEscPress);
+      closePopup();
     });
   });
 };

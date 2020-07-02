@@ -166,6 +166,13 @@ var createMapPins = function (array, template) {
   return fragment;
 };
 
+var onPopupEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    mapBlock.removeChild(mapBlock.querySelector('.map__card'));
+  }
+};
+
 var handleEventClickOnMapPin = function (array, element) {
   array.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -177,11 +184,17 @@ var handleEventClickOnMapPin = function (array, element) {
 
     mapBlock.insertBefore(renderMapCard(element, offerCard), mapFiltersContainer);
 
+    document.addEventListener('keydown', onPopupEscPress);
+
     var popupBtnClose = mapBlock.querySelector('.popup__close');
 
     popupBtnClose.addEventListener('click', function (evt1) {
+      var popup = mapBlock.querySelector('.popup');
+
       evt1.preventDefault();
-      mapBlock.removeChild(mapBlock.querySelector('.map__card'));
+      mapBlock.removeChild(popup);
+
+      document.removeEventListener('keydown', onPopupEscPress);
     });
   });
 };
@@ -235,13 +248,6 @@ var onActiveMode = function () {
   for (var i = 1; i < mapPins.length; i++) {
     handleEventClickOnMapPin(mapPins[i], offersArray[i - 1]);
   }
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      mapBlock.removeChild(mapBlock.querySelector('.map__card'));
-    }
-  });
 };
 
 var addDisabledAttribute = function (collect) {

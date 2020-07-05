@@ -10,6 +10,18 @@
 
   var addressInput = adFormBlock.querySelector('#address');
 
+  var addDisabledAttribute = function (collect) {
+    for (var i = 0; i < collect.length; i++) {
+      collect[i].disabled = true;
+    }
+  };
+
+  var removeDisabledAttribute = function (collect) {
+    for (var i = 0; i < collect.length; i++) {
+      collect[i].disabled = false;
+    }
+  };
+
   var activeForm = function () {
     addressInput.value = Math.round(addressInput.offsetTop + (window.const.WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (window.const.HEIGHT_MAP_PIN + window.const.HEIGHT_OFFSET));
 
@@ -64,5 +76,5 @@
     activeForm,
     unactiveForm,
     validForm
-  };
+  }
 })();

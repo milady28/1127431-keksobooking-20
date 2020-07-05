@@ -1,3 +1,5 @@
+'use strict';
+
 window.const = (function () {
   return {
     TYPE_ARRAY: ['palace', 'flat', 'house', 'bungalo'],
@@ -17,7 +19,7 @@ window.const = (function () {
       'bungalo': '0',
       'flat': '1000',
       'house': '5000',
-      'palace': '10000',
+      'palace': '10000'
     }
-  }
-});
+  };
+})();

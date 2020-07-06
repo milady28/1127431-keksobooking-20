@@ -65,7 +65,7 @@
     return array;
   };
 
-  var cardsArray = generateCardsArray();
+  window.cardsArray = generateCardsArray();
 
   var getTypeValue = function (type) {
     switch (type) {
@@ -128,7 +128,7 @@
     return mapCardElement;
   };
 
-  var addMapCardElements = function (element) {
+  window.addMapCardElements = function (element) {
     var mapBlock = document.querySelector('.map');
 
     var offerCard = document.querySelector('#card')
@@ -139,9 +139,4 @@
 
     mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
   };
-
-  window.card = {
-    cardsArray,
-    addMapCardElements
-  }
 })();

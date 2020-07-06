@@ -3,12 +3,12 @@
 (function () {
   var mainMapPin = document.querySelector('.map__pin--main');
 
-  window.map.deactiveMap();
+  window.deactiveMap();
 
   mainMapPin.addEventListener('mousedown', function (evt) {
     var buttonPressed = evt.button;
     if (buttonPressed === 0) {
-      window.map.activeMap();
+      window.activeMap();
     }
   });
 

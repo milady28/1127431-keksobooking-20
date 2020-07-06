@@ -24,17 +24,13 @@
     return fragment;
   };
 
-  var addMapPinElements = function () {
+  window.addMapPinElements = function () {
     var mapPinsBlock = mapBlock.querySelector('.map__pins');
 
     var mapPin = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-    mapPinsBlock.appendChild(createMapPins(window.card.cardsArray, mapPin));
+    mapPinsBlock.appendChild(createMapPins(window.cardsArray, mapPin));
   };
-
-  window.pin = {
-    addMapPinElements
-  }
 })();

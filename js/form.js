@@ -1,6 +1,24 @@
 'use strict';
 
 (function () {
+  var WIDTH_MAP_PIN = 62;
+  var HEIGHT_OFFSET = 22;
+  var HEIGHT_MAP_PIN = 62;
+
+  var CHOICES = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0'],
+  };
+
+  var MIN_PRICE = {
+    'bungalo': '0',
+    'flat': '1000',
+    'house': '5000',
+    'palace': '10000'
+  };
+
   var adFormBlock = document.querySelector('.ad-form');
   var allFieldsetAdForm = adFormBlock.querySelectorAll('fieldset');
 
@@ -22,29 +40,29 @@
     }
   };
 
-  window.activeForm = function () {
-    addressInput.value = Math.round(addressInput.offsetTop + (window.const.WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (window.const.HEIGHT_MAP_PIN + window.const.HEIGHT_OFFSET));
+  var activeForm = function () {
+    addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN + HEIGHT_OFFSET));
 
     removeDisabledAttribute(allFieldsetAdForm);
     removeDisabledAttribute(allFieldsetFiltersForm);
     removeDisabledAttribute(allSelectFiltersForm);
   };
 
-  window.unactiveForm = function () {
-    addressInput.value = Math.round(addressInput.offsetTop + (window.const.WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (window.const.HEIGHT_MAP_PIN / 2));
+  var unactiveForm = function () {
+    addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN / 2));
 
     addDisabledAttribute(allFieldsetAdForm);
     addDisabledAttribute(allFieldsetFiltersForm);
     addDisabledAttribute(allSelectFiltersForm);
   };
 
-  window.validForm = function () {
+  var validForm = function () {
     var roomNumberSelect = adFormBlock.querySelector('#room_number');
     var capacitySelect = adFormBlock.querySelector('#capacity');
 
     roomNumberSelect.addEventListener('change', function () {
       var selectedRooms = roomNumberSelect.value;
-      var guestsAvailable = window.const.CHOICES[selectedRooms];
+      var guestsAvailable = CHOICES[selectedRooms];
 
       Array.from(capacitySelect.children).forEach(function (option) {
         option.disabled = !guestsAvailable.includes(option.value);
@@ -57,7 +75,7 @@
 
     housingType.addEventListener('change', function () {
       var type = housingType.value;
-      var minPrice = window.const.MIN_PRICE[type];
+      var minPrice = MIN_PRICE[type];
 
       offerPrice.setAttribute('min', minPrice);
     });
@@ -70,5 +88,11 @@
       offerTimeIn.value = evt.target.value;
       offerTimeOut.value = evt.target.value;
     });
+  };
+
+  window.form = {
+    activeForm: activeForm,
+    unactiveForm: unactiveForm,
+    validForm: validForm
   };
 })();

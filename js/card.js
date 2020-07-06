@@ -2,27 +2,34 @@
 
 (function () {
   var generateMapCard = function () {
-    var WIDTH_MAP = window.const.WIDTH_MAP;
+    var getRandomInRange = window.addFunction.getRandomInRange;
+    var getRandomElement = window.addFunction.getRandomElement;
+    var getArrayWithRandomElements = window.addFunction.getArrayWithRandomElements;
 
-    var locationX = window.getRandomInRange(0, WIDTH_MAP);
-    var locationY = window.getRandomInRange(130, 630);
+    var TYPE_ARRAY = ['palace', 'flat', 'house', 'bungalo'];
+    var TIME_ARRAY = ['12:00', '13:00', '14:00'];
+    var FEATURES_ARRAY = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+    var WIDTH_MAP = 947.5;
+
+    var locationX = getRandomInRange(0, WIDTH_MAP);
+    var locationY = getRandomInRange(130, 630);
 
     var mapCard = {
       author: {
-        avatar: 'img/avatars/user0' + window.getRandomInRange(1, 8) + '.png'
+        avatar: 'img/avatars/user0' + getRandomInRange(1, 8) + '.png'
       },
       offer: {
         title: 'Заголовок предложения',
         address: locationX + ', ' + locationY,
         price: '5000',
-        type: window.getRandomElement(window.const.TYPE_ARRAY),
-        rooms: window.getRandomInRange(1, 4),
-        guests: window.getRandomInRange(1, 10),
-        checkin: window.getRandomElement(window.const.TIME_ARRAY),
-        checkout: window.getRandomElement(window.const.TIME_ARRAY),
-        features: window.getArrayWithRandomElements(window.const.FEATURES_ARRAY),
+        type: getRandomElement(TYPE_ARRAY),
+        rooms: getRandomInRange(1, 4),
+        guests: getRandomInRange(1, 10),
+        checkin: getRandomElement(TIME_ARRAY),
+        checkout: getRandomElement(TIME_ARRAY),
+        features: getArrayWithRandomElements(FEATURES_ARRAY),
         description: 'Описание предложения',
-        photos: 'http://o0.github.io/assets/images/tokyo/hotel' + window.getRandomInRange(1, 3) + '.jpg'
+        photos: 'http://o0.github.io/assets/images/tokyo/hotel' + getRandomInRange(1, 3) + '.jpg'
       },
       location: {
         x: locationX,
@@ -42,8 +49,6 @@
 
     return array;
   };
-
-  window.cardsArray = generateCardsArray();
 
   var getTypeValue = function (type) {
     switch (type) {
@@ -106,7 +111,7 @@
     return mapCardElement;
   };
 
-  window.addMapCardElements = function (element) {
+  var addMapCardElements = function (element) {
     var mapBlock = document.querySelector('.map');
 
     var offerCard = document.querySelector('#card')
@@ -116,5 +121,10 @@
     var mapFiltersContainer = document.querySelector('.map__filters-container');
 
     mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
+  };
+
+  window.card = {
+    generateCardsArray: generateCardsArray,
+    addMapCardElements: addMapCardElements
   };
 })();

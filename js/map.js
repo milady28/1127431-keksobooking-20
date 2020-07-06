@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var mapCardArray = window.cardsArray;
-  var addMapPinElements = window.addMapPinElements;
-  var addMapCardElements = window.addMapCardElements;
+  var mapCardArray = window.card.generateCardsArray();
+  var addMapPinElements = window.pin.addMapPinElements;
+  var addMapCardElements = window.card.addMapCardElements;
 
-  var activeForm = window.activeForm;
-  var unactiveForm = window.unactiveForm;
-  var validForm = window.validForm;
+  var activeForm = window.form.activeForm;
+  var unactiveForm = window.form.unactiveForm;
+  var validForm = window.form.validForm;
 
   var mapBlock = document.querySelector('.map');
 
@@ -52,14 +52,14 @@
     });
   };
 
-  window.activeMap = function () {
+  var activeMap = function () {
     mapBlock.classList.remove('map--faded');
     adFormBlock.classList.remove('ad-form--disabled');
 
     activeForm();
     validForm();
 
-    addMapPinElements();
+    addMapPinElements(mapCardArray);
 
     var mapPins = mapBlock.querySelectorAll('.map__pin');
 
@@ -68,10 +68,16 @@
     }
   };
 
-  window.deactiveMap = function () {
+  var deactiveMap = function () {
     mapBlock.classList.add('map--faded');
     adFormBlock.classList.add('ad-form--disabled');
 
     unactiveForm();
+  };
+
+  window.map = {
+    activeMap: activeMap,
+    deactiveMap: deactiveMap,
+    mapCardArray: mapCardArray
   };
 })();

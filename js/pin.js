@@ -26,17 +26,7 @@
     return fragment;
   };
 
-  var addMapPinElements = function (array) {
-    var mapPinsBlock = window.map.mapBlock.querySelector('.map__pins');
-
-    var mapPin = document.querySelector('#pin')
-    .content
-    .querySelector('.map__pin');
-
-    mapPinsBlock.appendChild(createMapPins(array, mapPin));
-  };
-
   window.pin = {
-    addMapPinElements: addMapPinElements
+    createMapPins: createMapPins
   };
 })();

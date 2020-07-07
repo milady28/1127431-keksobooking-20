@@ -111,18 +111,8 @@
     return mapCardElement;
   };
 
-  var addMapCardElements = function (element) {
-    var offerCard = document.querySelector('#card')
-        .content
-        .querySelector('.map__card');
-
-    var mapFiltersContainer = document.querySelector('.map__filters-container');
-
-    window.map.mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
-  };
-
   window.card = {
     generateCardsArray: generateCardsArray,
-    addMapCardElements: addMapCardElements
+    createMapCard: createMapCard
   };
 })();

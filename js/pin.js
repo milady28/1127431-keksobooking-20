@@ -5,8 +5,6 @@
   var HEIGHT_OFFSET = 22;
   var HEIGHT_MAP_PIN = 62;
 
-  var mapBlock = document.querySelector('.map');
-
   var createMapPin = function (pin, template) {
     var mapPinElement = template.cloneNode(true);
 
@@ -29,7 +27,7 @@
   };
 
   var addMapPinElements = function (array) {
-    var mapPinsBlock = mapBlock.querySelector('.map__pins');
+    var mapPinsBlock = window.map.mapBlock.querySelector('.map__pins');
 
     var mapPin = document.querySelector('#pin')
     .content

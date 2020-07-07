@@ -1,20 +1,23 @@
 'use strict';
 
 (function () {
+  var deactiveMap = window.map.deactiveMap;
+  var activeMap = window.map.activeMap;
+
   var mainMapPin = document.querySelector('.map__pin--main');
 
-  window.map.deactiveMap();
+  deactiveMap();
 
   mainMapPin.addEventListener('mousedown', function (evt) {
     var buttonPressed = evt.button;
     if (buttonPressed === 0) {
-      window.map.activeMap();
+      activeMap();
     }
   });
 
   mainMapPin.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
-      window.map.activeMap();
+      activeMap();
     }
   });
 })();

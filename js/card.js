@@ -1,16 +1,16 @@
 'use strict';
 
 (function () {
+  var getRandomInRange = window.addFunction.getRandomInRange;
+  var getRandomElement = window.addFunction.getRandomElement;
+  var getArrayWithRandomElements = window.addFunction.getArrayWithRandomElements;
+
+  var TYPE_ARRAY = ['palace', 'flat', 'house', 'bungalo'];
+  var TIME_ARRAY = ['12:00', '13:00', '14:00'];
+  var FEATURES_ARRAY = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var WIDTH_MAP = 947.5;
+
   var generateMapCard = function () {
-    var getRandomInRange = window.addFunction.getRandomInRange;
-    var getRandomElement = window.addFunction.getRandomElement;
-    var getArrayWithRandomElements = window.addFunction.getArrayWithRandomElements;
-
-    var TYPE_ARRAY = ['palace', 'flat', 'house', 'bungalo'];
-    var TIME_ARRAY = ['12:00', '13:00', '14:00'];
-    var FEATURES_ARRAY = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-    var WIDTH_MAP = 947.5;
-
     var locationX = getRandomInRange(0, WIDTH_MAP);
     var locationY = getRandomInRange(130, 630);
 
@@ -112,15 +112,13 @@
   };
 
   var addMapCardElements = function (element) {
-    var mapBlock = document.querySelector('.map');
-
     var offerCard = document.querySelector('#card')
         .content
         .querySelector('.map__card');
 
     var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-    mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
+    window.map.mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
   };
 
   window.card = {

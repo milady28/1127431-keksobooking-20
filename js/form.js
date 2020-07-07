@@ -41,6 +41,8 @@
   };
 
   var activeForm = function () {
+    adFormBlock.classList.remove('ad-form--disabled');
+
     addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN + HEIGHT_OFFSET));
 
     removeDisabledAttribute(allFieldsetAdForm);
@@ -49,6 +51,8 @@
   };
 
   var unactiveForm = function () {
+    adFormBlock.classList.add('ad-form--disabled');
+
     addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN / 2));
 
     addDisabledAttribute(allFieldsetAdForm);

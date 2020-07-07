@@ -11,8 +11,6 @@
 
   var mapBlock = document.querySelector('.map');
 
-  var adFormBlock = document.querySelector('.ad-form');
-
   var mapPinClickEvent = function (array, element) {
     array.addEventListener('click', function (evt) {
       evt.preventDefault();
@@ -36,10 +34,9 @@
 
       if (mapCard) {
         closePopup();
-        addMapCardElements(element);
-      } else {
-        addMapCardElements(element);
       }
+
+      addMapCardElements(element);
 
       document.addEventListener('keydown', onPopupEscPress);
 
@@ -54,7 +51,6 @@
 
   var activeMap = function () {
     mapBlock.classList.remove('map--faded');
-    adFormBlock.classList.remove('ad-form--disabled');
 
     activeForm();
     validForm();
@@ -70,7 +66,6 @@
 
   var deactiveMap = function () {
     mapBlock.classList.add('map--faded');
-    adFormBlock.classList.add('ad-form--disabled');
 
     unactiveForm();
   };
@@ -78,6 +73,7 @@
   window.map = {
     activeMap: activeMap,
     deactiveMap: deactiveMap,
-    mapCardArray: mapCardArray
+    mapCardArray: mapCardArray,
+    mapBlock: mapBlock
   };
 })();

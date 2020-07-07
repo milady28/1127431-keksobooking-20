@@ -12,11 +12,15 @@
 
   var mapBlock = document.querySelector('.map');
 
-  var addMapCardElements = function (element) {
-    var offerCard = document.querySelector('#card')
+  var offerCard = document.querySelector('#card')
         .content
         .querySelector('.map__card');
 
+  var mapPin = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');
+
+  var addMapCardElements = function (element) {
     var mapFiltersContainer = document.querySelector('.map__filters-container');
 
     mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
@@ -24,10 +28,6 @@
 
   var addMapPinElements = function (array) {
     var mapPinsBlock = mapBlock.querySelector('.map__pins');
-
-    var mapPin = document.querySelector('#pin')
-    .content
-    .querySelector('.map__pin');
 
     mapPinsBlock.appendChild(createMapPins(array, mapPin));
   };
@@ -93,7 +93,6 @@
 
   window.map = {
     activeMap: activeMap,
-    deactiveMap: deactiveMap,
-    mapCardArray: mapCardArray
+    deactiveMap: deactiveMap
   };
 })();

@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var mapCardArray = window.card.generateCardsArray();
-
   var activeForm = window.form.activeForm;
   var unactiveForm = window.form.unactiveForm;
   var validForm = window.form.validForm;
@@ -26,48 +24,10 @@
     mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
   };
 
-  var addMapPinElements = function (array) {
+  var addMapPinElements = function (elements) {
     var mapPinsBlock = mapBlock.querySelector('.map__pins');
 
-    mapPinsBlock.appendChild(createMapPins(array, mapPin));
-  };
-
-  var mapPinClickEvent = function (array, element) {
-    array.addEventListener('click', function (evt) {
-      evt.preventDefault();
-
-      var onPopupEscPress = function (evt1) {
-        if (evt1.key === 'Escape') {
-          evt1.preventDefault();
-
-          closePopup();
-        }
-      };
-
-      var closePopup = function () {
-        var popup = mapBlock.querySelector('.popup');
-        mapBlock.removeChild(popup);
-
-        document.removeEventListener('keydown', onPopupEscPress);
-      };
-
-      var mapCard = mapBlock.querySelector('.map__card');
-
-      if (mapCard) {
-        closePopup();
-      }
-
-      addMapCardElements(element);
-
-      document.addEventListener('keydown', onPopupEscPress);
-
-      var popupBtnClose = mapBlock.querySelector('.popup__close');
-
-      popupBtnClose.addEventListener('click', function (evt2) {
-        evt2.preventDefault();
-        closePopup();
-      });
-    });
+    mapPinsBlock.appendChild(elements);
   };
 
   var activeMap = function () {
@@ -76,13 +36,11 @@
     activeForm();
     validForm();
 
-    addMapPinElements(mapCardArray);
+    var mapCardArray = window.card.generateCardsArray();
 
-    var mapPins = mapBlock.querySelectorAll('.map__pin');
+    var cardElements = createMapPins(mapCardArray, mapPin, addMapCardElements, mapBlock);
 
-    for (var i = 1; i < mapPins.length; i++) {
-      mapPinClickEvent(mapPins[i], mapCardArray[i - 1]);
-    }
+    addMapPinElements(cardElements);
   };
 
   var deactiveMap = function () {

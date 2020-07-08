@@ -30,6 +30,44 @@
     mapPinsBlock.appendChild(elements);
   };
 
+  var addMapElementsFunction = function (pin, element) {
+    element.addEventListener('click', function (evt) {
+      evt.preventDefault();
+
+      var onPopupEscPress = function (evt1) {
+        if (evt1.key === 'Escape') {
+          evt1.preventDefault();
+
+          closePopup();
+        }
+      };
+
+      var closePopup = function () {
+        var popup = mapBlock.querySelector('.popup');
+        mapBlock.removeChild(popup);
+
+        document.removeEventListener('keydown', onPopupEscPress);
+      };
+
+      var mapCard = mapBlock.querySelector('.map__card');
+
+      if (mapCard) {
+        closePopup();
+      }
+
+      addMapCardElements(pin);
+
+      document.addEventListener('keydown', onPopupEscPress);
+
+      var popupBtnClose = mapBlock.querySelector('.popup__close');
+
+      popupBtnClose.addEventListener('click', function (evt2) {
+        evt2.preventDefault();
+        closePopup();
+      });
+    });
+  };
+
   var activeMap = function () {
     mapBlock.classList.remove('map--faded');
 
@@ -38,7 +76,7 @@
 
     var mapCardArray = window.card.generateCardsArray();
 
-    var cardElements = createMapPins(mapCardArray, mapPin, addMapCardElements, mapBlock);
+    var cardElements = createMapPins(mapCardArray, mapPin, addMapElementsFunction);
 
     addMapPinElements(cardElements);
   };

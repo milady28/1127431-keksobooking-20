@@ -11,8 +11,8 @@
   var mapBlock = document.querySelector('.map');
 
   var offerCard = document.querySelector('#card')
-        .content
-        .querySelector('.map__card');
+    .content
+    .querySelector('.map__card');
 
   var mapPin = document.querySelector('#pin')
     .content

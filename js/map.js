@@ -79,6 +79,8 @@
     var cardElements = createMapPins(mapCardArray, mapPin, addMapElementsFunction);
 
     addMapPinElements(cardElements);
+
+    window.pinMoving.pinMovingListener();
   };
 
   var deactiveMap = function () {

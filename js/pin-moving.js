@@ -1,10 +1,25 @@
 'use strict';
 (function () {
-  var mainPin = document.querySelector('.map__pin--main');
+  var small = document.querySelector('.map__pin--main');
+  var big = document.querySelector('.map');
+
+  var MAP_LIMITS = {
+    minY: 130,
+    maxY: 630
+  };
+
+  var limits = {
+    top: big.offsetTop + MAP_LIMITS.minY,
+    right: big.offsetLeft + big.offsetWidth - small.offsetWidth,
+    bottom: big.offsetTop + MAP_LIMITS.maxY,
+    left: big.offsetLeft
+  };
 
   var pinMovingListener = function () {
-    mainPin.addEventListener('mousedown', function (evt) {
+    small.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
+
+      small.style.zIndex = 9999;
 
       var startCoords = {
         x: evt.clientX,
@@ -14,6 +29,17 @@
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
 
+        movePin(moveEvt);
+      };
+
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
+
+      var movePin = function (moveEvt) {
         var shift = {
           x: startCoords.x - moveEvt.clientX,
           y: startCoords.y - moveEvt.clientY
@@ -24,16 +50,17 @@
           y: moveEvt.clientY
         };
 
-        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+        if (startCoords.x > limits.right) {
+          startCoords.x = limits.right;
+        } else if (startCoords.x > limits.left) {
+          small.style.left = (small.offsetLeft - shift.x) + 'px';
+        }
 
-      };
-
-      var onMouseUp = function (upEvt) {
-        upEvt.preventDefault();
-
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
+        if (startCoords.y > limits.bottom) {
+          startCoords.y = limits.bottom;
+        } else if (startCoords.y > limits.top) {
+          small.style.top = (small.offsetTop - shift.y) + 'px';
+        }
       };
 
       document.addEventListener('mousemove', onMouseMove);

@@ -6,14 +6,18 @@
 
   var mainMapPin = document.querySelector('.map__pin--main');
 
-  deactiveMap();
-
-  mainMapPin.addEventListener('mousedown', function (evt) {
+  var getActiveMode = function (evt) {
     var buttonPressed = evt.button;
     if (buttonPressed === 0) {
       activeMap();
+
+      mainMapPin.removeEventListener('mousedown', getActiveMode);
     }
-  });
+  };
+
+  mainMapPin.addEventListener('mousedown', getActiveMode);
+
+  deactiveMap();
 
   mainMapPin.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {

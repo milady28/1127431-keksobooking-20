@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   var mapPin = document.querySelector('.map__pin--main');
-  var map = document.querySelector('.map');
+  var map = document.querySelector('.map__pins');
 
   var addressInput = document.querySelector('#address');
 
@@ -12,8 +12,8 @@
 
   var limits = {
     top: map.offsetTop + MAP_LIMITS.minY,
-    right: map.offsetLeft + map.offsetWidth - mapPin.offsetWidth,
-    bottom: map.offsetTop + MAP_LIMITS.maxY,
+    right: map.offsetWidth - mapPin.offsetWidth,
+    bottom: MAP_LIMITS.maxY,
     left: map.offsetLeft
   };
 
@@ -42,11 +42,6 @@
       };
 
       var movePin = function (moveEvt) {
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY
-        };
-
         startCoords = {
           x: moveEvt.clientX,
           y: moveEvt.clientY
@@ -56,7 +51,7 @@
           var moveX = limits.right;
           startCoords.x = moveX;
         } else if (startCoords.x > limits.left) {
-          moveX = mapPin.offsetLeft - shift.x;
+          moveX = startCoords.x;
           mapPin.style.left = moveX + 'px';
         }
 
@@ -64,7 +59,7 @@
           var moveY = limits.bottom;
           startCoords.y = moveY;
         } else if (startCoords.y > limits.top) {
-          moveY = mapPin.offsetTop - shift.y;
+          moveY = startCoords.y;
           mapPin.style.top = moveY + 'px';
         }
 

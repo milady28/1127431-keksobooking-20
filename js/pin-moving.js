@@ -1,7 +1,9 @@
 'use strict';
 (function () {
-  var small = document.querySelector('.map__pin--main');
-  var big = document.querySelector('.map');
+  var mapPin = document.querySelector('.map__pin--main');
+  var map = document.querySelector('.map');
+
+  var addressInput = document.querySelector('#address');
 
   var MAP_LIMITS = {
     minY: 130,
@@ -9,17 +11,17 @@
   };
 
   var limits = {
-    top: big.offsetTop + MAP_LIMITS.minY,
-    right: big.offsetLeft + big.offsetWidth - small.offsetWidth,
-    bottom: big.offsetTop + MAP_LIMITS.maxY,
-    left: big.offsetLeft
+    top: map.offsetTop + MAP_LIMITS.minY,
+    right: map.offsetLeft + map.offsetWidth - mapPin.offsetWidth,
+    bottom: map.offsetTop + MAP_LIMITS.maxY,
+    left: map.offsetLeft
   };
 
   var pinMovingListener = function () {
-    small.addEventListener('mousedown', function (evt) {
+    mapPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      small.style.zIndex = 9999;
+      mapPin.style.zIndex = 9999;
 
       var startCoords = {
         x: evt.clientX,
@@ -51,16 +53,22 @@
         };
 
         if (startCoords.x > limits.right) {
-          startCoords.x = limits.right;
+          var moveX = limits.right;
+          startCoords.x = moveX;
         } else if (startCoords.x > limits.left) {
-          small.style.left = (small.offsetLeft - shift.x) + 'px';
+          moveX = mapPin.offsetLeft - shift.x;
+          mapPin.style.left = moveX + 'px';
         }
 
         if (startCoords.y > limits.bottom) {
-          startCoords.y = limits.bottom;
+          var moveY = limits.bottom;
+          startCoords.y = moveY;
         } else if (startCoords.y > limits.top) {
-          small.style.top = (small.offsetTop - shift.y) + 'px';
+          moveY = mapPin.offsetTop - shift.y;
+          mapPin.style.top = moveY + 'px';
         }
+
+        addressInput.value = Math.round(moveX) + ', ' + Math.round(moveY);
       };
 
       document.addEventListener('mousemove', onMouseMove);

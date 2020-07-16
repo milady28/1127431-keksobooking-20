@@ -76,11 +76,26 @@
     activeForm();
     validForm();
 
-    var mapCardArray = window.card.generateCardsArray();
+    var errorHandler = function (errorMessage) {
+      var node = document.createElement('div');
+      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.fontSize = '30px';
 
-    var cardElements = createMapPins(mapCardArray, mapPin, addMapElementsFunction);
+      node.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterbegin', node);
+    };
 
-    addMapPinElements(cardElements);
+    var successHandler = function (cards) {
+      var mapCardArray = cards;
+      var cardElements = createMapPins(mapCardArray, mapPin, addMapElementsFunction);
+
+      addMapPinElements(cardElements);
+    };
+
+    window.load.loadFunction(successHandler, errorHandler);
 
     addPinMovingListener();
   };

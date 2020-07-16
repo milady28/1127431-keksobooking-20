@@ -8,6 +8,8 @@
   var createMapPins = window.pin.createMapPins;
   var createMapCard = window.card.createMapCard;
 
+  var addPinMovingListener = window.pinMoving.pinMovingListener;
+
   var mapBlock = document.querySelector('.map');
 
   var offerCard = document.querySelector('#card')
@@ -79,6 +81,8 @@
     var cardElements = createMapPins(mapCardArray, mapPin, addMapElementsFunction);
 
     addMapPinElements(cardElements);
+
+    addPinMovingListener();
   };
 
   var deactiveMap = function () {

@@ -2,7 +2,6 @@
 
 (function () {
   var WIDTH_MAP_PIN = 62;
-  var HEIGHT_OFFSET = 22;
   var HEIGHT_MAP_PIN = 62;
 
   var CHOICES = {
@@ -42,8 +41,6 @@
 
   var activeForm = function () {
     adFormBlock.classList.remove('ad-form--disabled');
-
-    addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN + HEIGHT_OFFSET));
 
     removeDisabledAttribute(allFieldsetAdForm);
     removeDisabledAttribute(allFieldsetFiltersForm);

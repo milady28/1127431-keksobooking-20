@@ -4,18 +4,11 @@
   var WIDTH_MAP_PIN = 62;
   var HEIGHT_MAP_PIN = 62;
 
-  var CHOICE_ROOMS = {
+  var CHOICE = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0'],
-  };
-
-  var CHOICES_GUESTS = {
-    '1': ['1', '2', '3'],
-    '2': ['1', '2'],
-    '3': ['3'],
-    '0': ['100']
   };
 
   var MIN_PRICE = {
@@ -64,24 +57,29 @@
     addDisabledAttribute(allSelectFiltersForm);
   };
 
-  var validChangeListener = function (select, varyingSelect, choices) {
-    select.addEventListener('change', function () {
-      var selectedValue = select.value;
-      var availableValue = choices[selectedValue];
-
-      Array.from(varyingSelect.children).forEach(function (option) {
-        option.disabled = !availableValue.includes(option.value);
-        option.selected = !option.disabled;
-      });
-    });
-  };
-
   var validForm = function () {
     var roomNumberSelect = adFormBlock.querySelector('#room_number');
     var capacitySelect = adFormBlock.querySelector('#capacity');
 
-    validChangeListener(roomNumberSelect, capacitySelect, CHOICE_ROOMS);
-    validChangeListener(capacitySelect, roomNumberSelect, CHOICES_GUESTS);
+    roomNumberSelect.addEventListener('change', function () {
+      var selectedValue = roomNumberSelect.value;
+      var availableValue = CHOICE[selectedValue];
+
+      Array.from(capacitySelect.children).forEach(function (option) {
+        option.disabled = !availableValue.includes(option.value);
+        option.selected = !option.disabled;
+      });
+    });
+
+    capacitySelect.addEventListener('change', function () {
+      var selectedValue = capacitySelect.value;
+
+      if (selectedValue !== '1') {
+        capacitySelect.setCustomValidity('1 комната - для 1 гостя!');
+      } else {
+        capacitySelect.setCustomValidity('');
+      }
+    });
 
     var offerPrice = adFormBlock.querySelector('#price');
     var housingType = adFormBlock.querySelector('#type');

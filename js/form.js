@@ -4,7 +4,7 @@
   var WIDTH_MAP_PIN = 62;
   var HEIGHT_MAP_PIN = 62;
 
-  var CHOICES = {
+  var CHOICE = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
@@ -61,14 +61,17 @@
     var roomNumberSelect = adFormBlock.querySelector('#room_number');
     var capacitySelect = adFormBlock.querySelector('#capacity');
 
-    roomNumberSelect.addEventListener('change', function () {
-      var selectedRooms = roomNumberSelect.value;
-      var guestsAvailable = CHOICES[selectedRooms];
+    adFormBlock.addEventListener('change', function () {
+      var selectedRoom = roomNumberSelect.options[roomNumberSelect.selectedIndex];
+      var selectedCapacity = capacitySelect.options[capacitySelect.selectedIndex];
 
-      Array.from(capacitySelect.children).forEach(function (option) {
-        option.disabled = !guestsAvailable.includes(option.value);
-        option.selected = !option.disabled;
-      });
+      var availableValue = CHOICE[selectedRoom.value];
+
+      if (!availableValue.includes(selectedCapacity.value)) {
+        roomNumberSelect.setCustomValidity('Неверное количество комнат!');
+      } else {
+        roomNumberSelect.setCustomValidity('');
+      }
     });
 
     var offerPrice = adFormBlock.querySelector('#price');

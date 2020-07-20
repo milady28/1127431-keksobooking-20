@@ -4,11 +4,18 @@
   var WIDTH_MAP_PIN = 62;
   var HEIGHT_MAP_PIN = 62;
 
-  var CHOICES = {
+  var CHOICE_ROOMS = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0'],
+  };
+
+  var CHOICES_GUESTS = {
+    '1': ['1', '2', '3'],
+    '2': ['1', '2'],
+    '3': ['3'],
+    '0': ['100']
   };
 
   var MIN_PRICE = {
@@ -57,19 +64,24 @@
     addDisabledAttribute(allSelectFiltersForm);
   };
 
+  var validChangeListener = function (select, varyingSelect, choices) {
+    select.addEventListener('change', function () {
+      var selectedValue = select.value;
+      var availableValue = choices[selectedValue];
+
+      Array.from(varyingSelect.children).forEach(function (option) {
+        option.disabled = !availableValue.includes(option.value);
+        option.selected = !option.disabled;
+      });
+    });
+  };
+
   var validForm = function () {
     var roomNumberSelect = adFormBlock.querySelector('#room_number');
     var capacitySelect = adFormBlock.querySelector('#capacity');
 
-    roomNumberSelect.addEventListener('change', function () {
-      var selectedRooms = roomNumberSelect.value;
-      var guestsAvailable = CHOICES[selectedRooms];
-
-      Array.from(capacitySelect.children).forEach(function (option) {
-        option.disabled = !guestsAvailable.includes(option.value);
-        option.selected = !option.disabled;
-      });
-    });
+    validChangeListener(roomNumberSelect, capacitySelect, CHOICE_ROOMS);
+    validChangeListener(capacitySelect, roomNumberSelect, CHOICES_GUESTS);
 
     var offerPrice = adFormBlock.querySelector('#price');
     var housingType = adFormBlock.querySelector('#type');

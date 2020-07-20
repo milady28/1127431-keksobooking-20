@@ -46,7 +46,9 @@
 
       var closePopup = function () {
         var popup = mapBlock.querySelector('.popup');
-        mapBlock.removeChild(popup);
+        if (popup) {
+          popup.remove();
+        }
 
         document.removeEventListener('keydown', onPopupEscPress);
       };

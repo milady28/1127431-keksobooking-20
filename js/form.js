@@ -61,23 +61,16 @@
     var roomNumberSelect = adFormBlock.querySelector('#room_number');
     var capacitySelect = adFormBlock.querySelector('#capacity');
 
-    roomNumberSelect.addEventListener('change', function () {
-      var selectedValue = roomNumberSelect.value;
-      var availableValue = CHOICE[selectedValue];
+    adFormBlock.addEventListener('change', function () {
+      var selectedRoom = roomNumberSelect.options[roomNumberSelect.selectedIndex];
+      var selectedCapacity = capacitySelect.options[capacitySelect.selectedIndex];
 
-      Array.from(capacitySelect.children).forEach(function (option) {
-        option.disabled = !availableValue.includes(option.value);
-        option.selected = !option.disabled;
-      });
-    });
+      var availableValue = CHOICE[selectedRoom.value];
 
-    capacitySelect.addEventListener('change', function () {
-      var selectedValue = capacitySelect.value;
-
-      if (selectedValue !== '1') {
-        capacitySelect.setCustomValidity('1 комната - для 1 гостя!');
+      if (!availableValue.includes(selectedCapacity.value)) {
+        roomNumberSelect.setCustomValidity('Неверное количество комнат!');
       } else {
-        capacitySelect.setCustomValidity('');
+        roomNumberSelect.setCustomValidity('');
       }
     });
 

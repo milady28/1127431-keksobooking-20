@@ -179,16 +179,18 @@
     document.addEventListener('keydown', onMessageEscPress);
   };
 
-  var submitHandler = function (evt) {
-    window.load.uploadFunction(new FormData(adFormBlock), successMessage, errorMessage);
-    evt.preventDefault();
-  };
+  // var submitHandler = function (evt) {
+  //   window.load.uploadFunction(new FormData(adFormBlock), successMessage, errorMessage);
+  //   evt.preventDefault();
+  // };
 
-  adFormBlock.addEventListener('submit', submitHandler);
+  // adFormBlock.addEventListener('submit', submitHandler);
 
   window.form = {
     activeForm: activeForm,
     unactiveForm: unactiveForm,
-    validForm: validForm
+    validForm: validForm,
+    successMessage: successMessage,
+    errorMessage: errorMessage
   };
 })();

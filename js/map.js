@@ -105,7 +105,16 @@
   var deactiveMap = function () {
     mapBlock.classList.add('map--faded');
 
+    var mapPinsBlock = mapBlock.querySelector('.map__pins');
+    var mapPins = mapBlock.querySelectorAll('.map__pin');
+
     unactiveForm();
+
+    if (mapPins.length > 1) {
+      for (var i = 1; i < mapPins.length; i++) {
+        mapPinsBlock.removeChild(mapPins[i]);
+      }
+    }
   };
 
   window.map = {

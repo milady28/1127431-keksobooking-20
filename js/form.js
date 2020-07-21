@@ -15,6 +15,8 @@
     'palace': '10000'
   };
 
+  var uploadFunction = window.load.uploadFunction;
+
   var adFormBlock = document.querySelector('.ad-form');
   var allFieldsetAdForm = adFormBlock.querySelectorAll('fieldset');
 
@@ -36,6 +38,18 @@
     }
   };
 
+  var submitHandler = function (evt) {
+    var deactiveMap = window.map.deactiveMap;
+
+    uploadFunction(new FormData(adFormBlock), function () {
+      successMessage();
+      deactiveMap();
+    }, function () {
+      errorMessage();
+    });
+    evt.preventDefault();
+  };
+
   var activeForm = function () {
     adFormBlock.classList.remove('ad-form--disabled');
 
@@ -50,6 +64,8 @@
 
       adFormBlock.reset();
     });
+
+    adFormBlock.addEventListener('submit', submitHandler);
   };
 
   var unactiveForm = function () {
@@ -131,6 +147,7 @@
       evt2.preventDefault();
 
       closeMessage();
+      document.removeEventListener('click', onEscClickListener);
     };
 
     document.addEventListener('click', onEscClickListener);
@@ -169,6 +186,7 @@
       evt2.preventDefault();
 
       closeMessage();
+      document.removeEventListener('click', onEscClickListener);
     };
 
     var closeButton = errorWindow.querySelector('.error__button');

@@ -77,8 +77,6 @@
     var buttonPressed = evt.button;
     if (buttonPressed === 0) {
       activeMap();
-
-      mainMapPin.removeEventListener('mousedown', getActiveMode);
     }
   };
 
@@ -87,6 +85,8 @@
 
     activeForm();
     validForm();
+
+    mainMapPin.removeEventListener('mousedown', getActiveMode);
 
     var errorHandler = function (errorMessage) {
       var node = document.createElement('div');
@@ -110,12 +110,12 @@
     window.load.loadFunction(successHandler, errorHandler);
 
     addPinMovingListener();
-
-    mainMapPin.addEventListener('mousedown', getActiveMode);
   };
 
   var deactiveMap = function () {
     mapBlock.classList.add('map--faded');
+
+    mainMapPin.addEventListener('mousedown', getActiveMode);
 
     var mapPinsBlock = mapBlock.querySelector('.map__pins');
     var mapPins = mapBlock.querySelectorAll('.map__pin');
@@ -127,12 +127,11 @@
         mapPinsBlock.removeChild(mapPins[i]);
       }
     }
-
-    mainMapPin.addEventListener('mousedown', getActiveMode);
   };
 
   window.map = {
     activeMap: activeMap,
-    deactiveMap: deactiveMap
+    deactiveMap: deactiveMap,
+    getActiveMode: getActiveMode
   };
 })();

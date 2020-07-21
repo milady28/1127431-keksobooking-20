@@ -34,14 +34,13 @@
     xhr.send();
   };
 
-  var uploadFunction = function (data, onSuccess, onError, deactiveMap) {
+  var uploadFunction = function (data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
-        deactiveMap();
       } else {
         onError(xhr.response);
       }

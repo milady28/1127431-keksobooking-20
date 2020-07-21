@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var WIDTH_MAP_PIN = 62;
-  var HEIGHT_MAP_PIN = 62;
-
   var CHOICE = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -45,12 +42,22 @@
     removeDisabledAttribute(allFieldsetAdForm);
     removeDisabledAttribute(allFieldsetFiltersForm);
     removeDisabledAttribute(allSelectFiltersForm);
+
+    var resetButton = adFormBlock.querySelector('.ad-form__reset');
+
+    resetButton.addEventListener('click', function (evt) {
+      evt.preventDefault();
+
+      adFormBlock.reset();
+    });
   };
 
   var unactiveForm = function () {
     adFormBlock.classList.add('ad-form--disabled');
 
-    addressInput.value = Math.round(addressInput.offsetTop + (WIDTH_MAP_PIN / 2)) + ', ' + Math.round(addressInput.offsetLeft + (HEIGHT_MAP_PIN / 2));
+    var mapPin = document.querySelector('.map__pin--main');
+
+    addressInput.value = Math.floor(mapPin.offsetLeft) + ', ' + Math.floor(mapPin.offsetTop);
 
     addDisabledAttribute(allFieldsetAdForm);
     addDisabledAttribute(allFieldsetFiltersForm);
@@ -93,6 +100,91 @@
       offerTimeOut.value = evt.target.value;
     });
   };
+
+  var successMessage = function () {
+    var successWindowTemplate = document.querySelector('#success')
+      .content
+      .querySelector('.success');
+
+    var successWindow = successWindowTemplate.cloneNode(true);
+
+    document.querySelector('main').appendChild(successWindow);
+
+    var onMessageEscPress = function (evt1) {
+      if (evt1.key === 'Escape') {
+        evt1.preventDefault();
+
+        closeMessage();
+      }
+    };
+
+    var closeMessage = function () {
+      var message = document.querySelector('.success');
+      if (message) {
+        message.remove();
+      }
+
+      document.removeEventListener('keydown', onMessageEscPress);
+    };
+
+    var onEscClickListener = function (evt2) {
+      evt2.preventDefault();
+
+      closeMessage();
+    };
+
+    document.addEventListener('click', onEscClickListener);
+    document.addEventListener('keydown', onMessageEscPress);
+
+    adFormBlock.reset();
+  };
+
+  var errorMessage = function () {
+    var errorWindowTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
+
+    var errorWindow = errorWindowTemplate.cloneNode(true);
+
+    document.querySelector('main').appendChild(errorWindow);
+
+    var onMessageEscPress = function (evt1) {
+      if (evt1.key === 'Escape') {
+        evt1.preventDefault();
+
+        closeMessage();
+      }
+    };
+
+    var closeMessage = function () {
+      var message = document.querySelector('.error');
+      if (message) {
+        message.remove();
+      }
+
+      document.removeEventListener('keydown', onMessageEscPress);
+    };
+
+    var onEscClickListener = function (evt2) {
+      evt2.preventDefault();
+
+      closeMessage();
+    };
+
+    var closeButton = errorWindow.querySelector('.error__button');
+
+    closeButton.addEventListener('click', onEscClickListener);
+
+    document.addEventListener('click', onEscClickListener);
+    document.addEventListener('keydown', onMessageEscPress);
+  };
+
+  var submitHandler = function (evt) {
+    window.load.uploadFunction(new FormData(adFormBlock), successMessage, errorMessage);
+    evt.preventDefault();
+  };
+
+  adFormBlock.addEventListener('submit', submitHandler);
 
   window.form = {
     activeForm: activeForm,

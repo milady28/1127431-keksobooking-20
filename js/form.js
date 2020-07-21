@@ -179,13 +179,6 @@
     document.addEventListener('keydown', onMessageEscPress);
   };
 
-  // var submitHandler = function (evt) {
-  //   window.load.uploadFunction(new FormData(adFormBlock), successMessage, errorMessage);
-  //   evt.preventDefault();
-  // };
-
-  // adFormBlock.addEventListener('submit', submitHandler);
-
   window.form = {
     activeForm: activeForm,
     unactiveForm: unactiveForm,

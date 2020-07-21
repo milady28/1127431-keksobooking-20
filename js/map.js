@@ -11,6 +11,7 @@
   var addPinMovingListener = window.pinMoving.pinMovingListener;
 
   var mapBlock = document.querySelector('.map');
+  var mainMapPin = mapBlock.querySelector('.map__pin--main');
 
   var offerCard = document.querySelector('#card')
     .content
@@ -72,6 +73,15 @@
     });
   };
 
+  var getActiveMode = function (evt) {
+    var buttonPressed = evt.button;
+    if (buttonPressed === 0) {
+      activeMap();
+
+      mainMapPin.removeEventListener('mousedown', getActiveMode);
+    }
+  };
+
   var activeMap = function () {
     mapBlock.classList.remove('map--faded');
 
@@ -100,6 +110,8 @@
     window.load.loadFunction(successHandler, errorHandler);
 
     addPinMovingListener();
+
+    mainMapPin.addEventListener('mousedown', getActiveMode);
   };
 
   var deactiveMap = function () {
@@ -115,6 +127,8 @@
         mapPinsBlock.removeChild(mapPins[i]);
       }
     }
+
+    mainMapPin.addEventListener('mousedown', getActiveMode);
   };
 
   window.map = {

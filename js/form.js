@@ -127,8 +127,6 @@
 
       if (minPrice < offerPrice.value) {
         offerPrice.setCustomValidity('');
-      } else {
-        offerPrice.setCustomValidity('');
       }
     });
 

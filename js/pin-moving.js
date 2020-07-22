@@ -21,7 +21,6 @@
       var shiftY = evt.pageY - mapPin.offsetTop;
 
       mapPin.style.position = 'absolute';
-      mapPin.style.zIndex = 99;
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();

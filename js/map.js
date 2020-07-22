@@ -11,7 +11,9 @@
   var addPinMovingListener = window.pinMoving.pinMovingListener;
 
   var mapBlock = document.querySelector('.map');
+  var mapPinsBlock = mapBlock.querySelector('.map__pins');
   var mainMapPin = mapBlock.querySelector('.map__pin--main');
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
 
   var offerCard = document.querySelector('#card')
     .content
@@ -22,14 +24,10 @@
     .querySelector('.map__pin');
 
   var addMapCardElements = function (element) {
-    var mapFiltersContainer = document.querySelector('.map__filters-container');
-
     mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
   };
 
   var addMapPinElements = function (elements) {
-    var mapPinsBlock = mapBlock.querySelector('.map__pins');
-
     mapPinsBlock.appendChild(elements);
   };
 
@@ -117,10 +115,9 @@
 
     mainMapPin.addEventListener('mousedown', getActiveMode);
 
-    var mapPinsBlock = mapBlock.querySelector('.map__pins');
-    var mapPins = mapBlock.querySelectorAll('.map__pin');
+    unactiveForm(mainMapPin);
 
-    unactiveForm();
+    var mapPins = mapBlock.querySelectorAll('.map__pin');
 
     if (mapPins.length > 1) {
       for (var i = 1; i < mapPins.length; i++) {

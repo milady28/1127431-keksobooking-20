@@ -119,11 +119,17 @@
       }
     });
 
-    housingType.addEventListener('change', function () {
+    offerPrice.addEventListener('change', function () {
       var type = housingType.value;
       var minPrice = MIN_PRICE[type];
 
       offerPrice.setAttribute('min', minPrice);
+
+      if (minPrice < offerPrice.value) {
+        offerPrice.setCustomValidity('');
+      } else {
+        offerPrice.setCustomValidity('');
+      }
     });
 
     adTimeBlock.addEventListener('change', function (evt) {

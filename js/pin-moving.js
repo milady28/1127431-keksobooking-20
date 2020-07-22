@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var mapPin = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map__pins');
@@ -20,7 +21,6 @@
       var shiftY = evt.pageY - mapPin.offsetTop;
 
       mapPin.style.position = 'absolute';
-      mapPin.style.zIndex = 1000;
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();

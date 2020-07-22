@@ -22,10 +22,17 @@
 
   var uploadFunction = window.load.uploadFunction;
 
+  var addDisabledAttribute = window.util.addDisabledAttribute;
+  var removeDisabledAttribute = window.util.removeDisabledAttribute;
+
+  var blockFieldsFilters = window.filter.blockFieldsFilters;
+  var unlockFieldsFilters = window.filter.unlockFieldsFilters;
+  var resetFiltersForm = window.filter.resetFiltersForm;
+
   var mainBlock = document.querySelector('main');
 
   var adFormBlock = document.querySelector('.ad-form');
-  var allFieldsetAdForm = adFormBlock.querySelectorAll('fieldset');
+  var fieldsetsAdForm = adFormBlock.querySelectorAll('fieldset');
   var resetButton = adFormBlock.querySelector('.ad-form__reset');
 
   var roomNumberSelect = adFormBlock.querySelector('#room_number');
@@ -38,10 +45,6 @@
   var offerTimeIn = adFormBlock.querySelector('#timein');
   var offerTimeOut = adFormBlock.querySelector('#timeout');
 
-  var mapFiltersForm = document.querySelector('.map__filters');
-  var allFieldsetFiltersForm = mapFiltersForm.querySelectorAll('fieldset');
-  var allSelectFiltersForm = mapFiltersForm.querySelectorAll('select');
-
   var addressInput = adFormBlock.querySelector('#address');
 
   var successWindowTemplate = document.querySelector('#success')
@@ -51,18 +54,6 @@
   var errorWindowTemplate = document.querySelector('#error')
       .content
       .querySelector('.error');
-
-  var addDisabledAttribute = function (collect) {
-    for (var i = 0; i < collect.length; i++) {
-      collect[i].disabled = true;
-    }
-  };
-
-  var removeDisabledAttribute = function (collect) {
-    for (var i = 0; i < collect.length; i++) {
-      collect[i].disabled = false;
-    }
-  };
 
   var submitHandler = function (evt) {
     var deactiveMap = window.map.deactiveMap;
@@ -76,33 +67,36 @@
     evt.preventDefault();
   };
 
+  var onResetButtonClick = function (evt) {
+    evt.preventDefault();
+
+    adFormBlock.reset();
+    resetFiltersForm();
+  };
+
   var activeForm = function () {
     adFormBlock.classList.remove('ad-form--disabled');
 
-    removeDisabledAttribute(allFieldsetAdForm);
-    removeDisabledAttribute(allFieldsetFiltersForm);
-    removeDisabledAttribute(allSelectFiltersForm);
+    removeDisabledAttribute(fieldsetsAdForm);
+    unlockFieldsFilters();
 
-    resetButton.addEventListener('click', function (evt) {
-      evt.preventDefault();
-
-      adFormBlock.reset();
-    });
+    resetButton.addEventListener('click', onResetButtonClick);
 
     adFormBlock.addEventListener('submit', submitHandler);
   };
 
-  var unactiveForm = function (mainPin) {
+  var unactiveForm = function (mainMapPin) {
     adFormBlock.classList.add('ad-form--disabled');
 
-    mainPin.style.left = START_COORDS.x + 'px';
-    mainPin.style.top = START_COORDS.y + 'px';
+    mainMapPin.style.left = START_COORDS.x + 'px';
+    mainMapPin.style.top = START_COORDS.y + 'px';
 
     addressInput.value = Math.floor(START_COORDS.x) + ', ' + Math.floor(START_COORDS.y);
 
-    addDisabledAttribute(allFieldsetAdForm);
-    addDisabledAttribute(allFieldsetFiltersForm);
-    addDisabledAttribute(allSelectFiltersForm);
+    addDisabledAttribute(fieldsetsAdForm);
+    blockFieldsFilters();
+
+    resetButton.removeEventListener('click', onResetButtonClick);
   };
 
   var validForm = function () {

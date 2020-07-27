@@ -23,14 +23,12 @@
   var createMapPins = function (array, template, onMapPinClick) {
     var fragment = document.createDocumentFragment();
 
-    array.slice().forEach(function (pin) {
+    array.slice(0, 5).forEach(function (pin) {
       fragment.appendChild(createMapPin(pin, template, onMapPinClick));
     });
 
     return fragment;
   };
-
-
 
   window.pin = {
     createMapPins: createMapPins

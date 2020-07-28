@@ -3,8 +3,6 @@
 (function () {
   var addressInput = document.querySelector('#address');
 
-  var PIN_WEIGHT = 62;
-
   var onMapPinMousedown = function (mainMapPin, mapPin, mapLimit) {
     mainMapPin.addEventListener('mousedown', function (evt) {
       var coordsMax = document.documentElement.scrollWidth;

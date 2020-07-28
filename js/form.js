@@ -22,7 +22,7 @@
 
   var PIN_OFFSET = {
     offsetY: 54
-  }
+  };
 
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
@@ -33,7 +33,6 @@
 
   var blockFieldsFilters = window.filter.blockFieldsFilters;
   var unlockFieldsFilters = window.filter.unlockFieldsFilters;
-  var resetFiltersForm = window.filter.resetFiltersForm;
 
   var mainBlock = document.querySelector('main');
 
@@ -72,7 +71,7 @@
       var fileName = file.name.toLowerCase();
 
       var matches = FILE_TYPES.some(function (it) {
-       return fileName.endsWith(it);
+        return fileName.endsWith(it);
       });
 
       if (matches) {
@@ -97,7 +96,7 @@
       var fileName = file.name.toLowerCase();
 
       var matches = FILE_TYPES.some(function (it) {
-       return fileName.endsWith(it);
+        return fileName.endsWith(it);
       });
 
       if (matches) {

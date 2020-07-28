@@ -8,49 +8,62 @@
   var createMapPins = window.pin.createMapPins;
   var createMapCard = window.card.createMapCard;
 
-  var addPinMovingListener = window.pinMoving.pinMovingListener;
+  var onMapPinMousedown = window.pinMoving.onMapPinMousedown;
+
+  var loadFunction = window.load.loadFunction;
+
+  var offerFilter = window.filter.offerFilter;
+
+  var debounce = window.debounce.debounceFunction;
 
   var mapBlock = document.querySelector('.map');
   var mapPinsBlock = mapBlock.querySelector('.map__pins');
   var mainMapPin = mapBlock.querySelector('.map__pin--main');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-  var offerCard = document.querySelector('#card')
+  var mapFiltersForm = document.querySelector('.map__filters');
+  var selectFilters = mapFiltersForm.querySelectorAll('.map__filter');
+  var inputFilters = mapFiltersForm.querySelectorAll('.map__checkbox');
+
+  var offerCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');
 
-  var mapPin = document.querySelector('#pin')
+  var mapPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-  var addMapCardElements = function (element) {
-    mapBlock.insertBefore(createMapCard(element, offerCard), mapFiltersContainer);
+  var MAP_LIMITS = {
+    top: 130,
+    right: mapPinsBlock.offsetLeft + mapPinsBlock.offsetWidth - mainMapPin.offsetWidth,
+    bottom: 630,
+    left: mapPinsBlock.offsetLeft
   };
 
-  var addMapPinElements = function (elements) {
-    mapPinsBlock.appendChild(elements);
+  var addMapCardElement = function (element) {
+    mapBlock.insertBefore(createMapCard(element, offerCardTemplate), mapFiltersContainer);
   };
 
-  var addMapElementsFunction = function (pin, element) {
+  var onPopupEscPress = function (pressEvt) {
+    if (pressEvt.key === 'Escape') {
+      pressEvt.preventDefault();
+
+      closePopup();
+    }
+  };
+
+  var closePopup = function () {
+    var popup = mapBlock.querySelector('.popup');
+    if (popup) {
+      popup.remove();
+    }
+
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+  var onMapPinClick = function (pin, element) {
     element.addEventListener('click', function (evt) {
       evt.preventDefault();
-
-      var onPopupEscPress = function (evt1) {
-        if (evt1.key === 'Escape') {
-          evt1.preventDefault();
-
-          closePopup();
-        }
-      };
-
-      var closePopup = function () {
-        var popup = mapBlock.querySelector('.popup');
-        if (popup) {
-          popup.remove();
-        }
-
-        document.removeEventListener('keydown', onPopupEscPress);
-      };
 
       var mapCard = mapBlock.querySelector('.map__card');
 
@@ -58,14 +71,14 @@
         closePopup();
       }
 
-      addMapCardElements(pin);
+      addMapCardElement(pin);
 
       document.addEventListener('keydown', onPopupEscPress);
 
-      var popupBtnClose = mapBlock.querySelector('.popup__close');
+      var popupButtonClose = mapBlock.querySelector('.popup__close');
 
-      popupBtnClose.addEventListener('click', function (evt2) {
-        evt2.preventDefault();
+      popupButtonClose.addEventListener('click', function (clickEvt) {
+        clickEvt.preventDefault();
         closePopup();
       });
     });
@@ -76,6 +89,22 @@
     if (buttonPressed === 0) {
       activeMap();
     }
+  };
+
+  var removeMapPins = function () {
+    var mapPins = mapBlock.querySelectorAll('.map__pin');
+
+    if (mapPins.length > 1) {
+      for (var i = 1; i < mapPins.length; i++) {
+        mapPinsBlock.removeChild(mapPins[i]);
+      }
+    }
+  };
+
+  var addMapPinElement = function (mapCards) {
+    var cardElements = createMapPins(mapCards, mapPinTemplate, onMapPinClick);
+
+    mapPinsBlock.appendChild(cardElements);
   };
 
   var activeMap = function () {
@@ -98,16 +127,46 @@
       document.body.insertAdjacentElement('afterbegin', node);
     };
 
-    var successHandler = function (cards) {
-      var mapCardArray = cards;
-      var cardElements = createMapPins(mapCardArray, mapPin, addMapElementsFunction);
-
-      addMapPinElements(cardElements);
+    var getFilterValue = function (filter, value) {
+      filter = value;
+      debounce(updateCards);
     };
 
-    window.load.loadFunction(successHandler, errorHandler);
+    selectFilters.forEach(function (element) {
+      element.addEventListener('change', function (evt) {
+        getFilterValue(element.value, evt.target.value);
+      });
+    });
 
-    addPinMovingListener();
+    inputFilters.forEach(function (element) {
+      element.addEventListener('change', function () {
+        getFilterValue(element, element.checked);
+      });
+    });
+
+    var updateCards = function () {
+      var filteredCards = cards.filter(offerFilter);
+
+      removeMapPins();
+      closePopup();
+
+      var uniqueCards = filteredCards.filter(function (it, i) {
+        return filteredCards.indexOf(it) === i;
+      });
+
+      addMapPinElement(uniqueCards);
+    };
+
+    var cards = [];
+
+    var successHandler = function (mapCards) {
+      cards = mapCards;
+      updateCards(cards);
+    };
+
+    loadFunction(successHandler, errorHandler);
+
+    onMapPinMousedown(mainMapPin, mapPinTemplate, MAP_LIMITS);
   };
 
   var deactiveMap = function () {
@@ -117,13 +176,8 @@
 
     unactiveForm(mainMapPin);
 
-    var mapPins = mapBlock.querySelectorAll('.map__pin');
-
-    if (mapPins.length > 1) {
-      for (var i = 1; i < mapPins.length; i++) {
-        mapPinsBlock.removeChild(mapPins[i]);
-      }
-    }
+    removeMapPins();
+    closePopup();
   };
 
   window.map = {

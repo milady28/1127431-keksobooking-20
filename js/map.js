@@ -13,6 +13,7 @@
   var loadFunction = window.load.loadFunction;
 
   var offerFilter = window.filter.offerFilter;
+  var resetFiltersForm = window.filter.resetFiltersForm;
 
   var debounce = window.debounce.debounceFunction;
 
@@ -32,6 +33,8 @@
   var mapPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
+
+  var resetButton = document.querySelector('.ad-form__reset');
 
   var MAP_LIMITS = {
     top: 130,
@@ -107,6 +110,12 @@
     mapPinsBlock.appendChild(cardElements);
   };
 
+  var onResetButtonClick = function (evt) {
+    evt.preventDefault();
+
+    deactiveMap();
+  };
+
   var activeMap = function () {
     mapBlock.classList.remove('map--faded');
 
@@ -167,6 +176,8 @@
     loadFunction(successHandler, errorHandler);
 
     onMapPinMousedown(mainMapPin, mapPinTemplate, MAP_LIMITS);
+
+    resetButton.addEventListener('click', onResetButtonClick);
   };
 
   var deactiveMap = function () {
@@ -175,9 +186,12 @@
     mainMapPin.addEventListener('mousedown', getActiveMode);
 
     unactiveForm(mainMapPin);
+    resetFiltersForm();
 
     removeMapPins();
     closePopup();
+
+    resetButton.removeEventListener('click', onResetButtonClick);
   };
 
   window.map = {

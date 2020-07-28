@@ -20,6 +20,12 @@
     y: 375
   };
 
+  var PIN_OFFSET = {
+    offsetY: 54
+  }
+
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var uploadFunction = window.load.uploadFunction;
 
   var addDisabledAttribute = window.util.addDisabledAttribute;
@@ -33,7 +39,6 @@
 
   var adFormBlock = document.querySelector('.ad-form');
   var fieldsetsAdForm = adFormBlock.querySelectorAll('fieldset');
-  var resetButton = adFormBlock.querySelector('.ad-form__reset');
 
   var roomNumberSelect = adFormBlock.querySelector('#room_number');
   var capacitySelect = adFormBlock.querySelector('#capacity');
@@ -47,6 +52,12 @@
 
   var addressInput = adFormBlock.querySelector('#address');
 
+  var previewChooser = adFormBlock.querySelector('.ad-form-header input[type=file]');
+  var preview = adFormBlock.querySelector('.ad-form-header__preview img');
+
+  var photoChooser = adFormBlock.querySelector('.ad-form__upload input[type=file]');
+  var housingPhotoBlock = adFormBlock.querySelector('.ad-form__photo');
+
   var successWindowTemplate = document.querySelector('#success')
       .content
       .querySelector('.success');
@@ -54,6 +65,55 @@
   var errorWindowTemplate = document.querySelector('#error')
       .content
       .querySelector('.error');
+
+  var onUserPreviewChange = function () {
+    previewChooser.addEventListener('change', function () {
+      var file = previewChooser.files[0];
+      var fileName = file.name.toLowerCase();
+
+      var matches = FILE_TYPES.some(function (it) {
+       return fileName.endsWith(it);
+      });
+
+      if (matches) {
+        var reader = new FileReader();
+
+        reader.addEventListener('load', function () {
+          preview.src = reader.result;
+        });
+
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  var onHousingPhotoChange = function () {
+    photoChooser.addEventListener('change', function () {
+      var img = document.createElement('img');
+      var widthPhoto = housingPhotoBlock.offsetWidth;
+      var heightPhoto = housingPhotoBlock.offsetHeight;
+
+      var file = photoChooser.files[0];
+      var fileName = file.name.toLowerCase();
+
+      var matches = FILE_TYPES.some(function (it) {
+       return fileName.endsWith(it);
+      });
+
+      if (matches) {
+        var reader = new FileReader();
+
+        reader.addEventListener('load', function () {
+          img.src = reader.result;
+          img.setAttribute('width', widthPhoto);
+          img.setAttribute('height', heightPhoto);
+          housingPhotoBlock.appendChild(img);
+        });
+
+        reader.readAsDataURL(file);
+      }
+    });
+  };
 
   var submitHandler = function (evt) {
     var deactiveMap = window.map.deactiveMap;
@@ -67,20 +127,16 @@
     evt.preventDefault();
   };
 
-  var onResetButtonClick = function (evt) {
-    evt.preventDefault();
-
-    adFormBlock.reset();
-    resetFiltersForm();
-  };
-
   var activeForm = function () {
     adFormBlock.classList.remove('ad-form--disabled');
 
+    onUserPreviewChange();
+    onHousingPhotoChange();
+
+    addressInput.value = Math.floor(START_COORDS.x) + ', ' + Math.floor(START_COORDS.y + PIN_OFFSET.offsetY);
+
     removeDisabledAttribute(fieldsetsAdForm);
     unlockFieldsFilters();
-
-    resetButton.addEventListener('click', onResetButtonClick);
 
     adFormBlock.addEventListener('submit', submitHandler);
   };
@@ -91,12 +147,12 @@
     mainMapPin.style.left = START_COORDS.x + 'px';
     mainMapPin.style.top = START_COORDS.y + 'px';
 
+    adFormBlock.reset();
+
     addressInput.value = Math.floor(START_COORDS.x) + ', ' + Math.floor(START_COORDS.y);
 
     addDisabledAttribute(fieldsetsAdForm);
     blockFieldsFilters();
-
-    resetButton.removeEventListener('click', onResetButtonClick);
   };
 
   var validForm = function () {

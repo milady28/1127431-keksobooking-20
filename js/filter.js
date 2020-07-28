@@ -46,7 +46,7 @@
       return false;
     }
 
-    if (housingRooms.value !== 'any' && card.offer.guests !== ROOMS_VALUE[housingRooms.value]) {
+    if (housingRooms.value !== 'any' && card.offer.rooms !== ROOMS_VALUE[housingRooms.value]) {
       return false;
     }
 

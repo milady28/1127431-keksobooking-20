@@ -4,6 +4,7 @@
   var activeForm = window.form.activeForm;
   var unactiveForm = window.form.unactiveForm;
   var validForm = window.form.validForm;
+  var resetFileFields = window.form.resetFileFields;
 
   var createMapPins = window.pin.createMapPins;
   var createMapCard = window.card.createMapCard;
@@ -38,9 +39,9 @@
 
   var MAP_LIMITS = {
     top: 130,
-    right: mapPinsBlock.offsetLeft + mapPinsBlock.offsetWidth - mainMapPin.offsetWidth,
+    right: mapPinsBlock.offsetLeft + mapPinsBlock.offsetWidth - mainMapPin.offsetWidth / 2,
     bottom: 630,
-    left: mapPinsBlock.offsetLeft
+    left: mapPinsBlock.offsetLeft - mainMapPin.offsetWidth / 2
   };
 
   var addMapCardElement = function (element) {
@@ -87,7 +88,7 @@
     });
   };
 
-  var getActiveMode = function (evt) {
+  var onMainPinMousedown = function (evt) {
     var buttonPressed = evt.button;
     if (buttonPressed === 0) {
       activeMap();
@@ -114,6 +115,7 @@
     evt.preventDefault();
 
     deactiveMap();
+    resetFileFields();
   };
 
   var activeMap = function () {
@@ -122,7 +124,7 @@
     activeForm();
     validForm();
 
-    mainMapPin.removeEventListener('mousedown', getActiveMode);
+    mainMapPin.removeEventListener('mousedown', onMainPinMousedown);
 
     var errorHandler = function (errorMessage) {
       var node = document.createElement('div');
@@ -183,7 +185,7 @@
   var deactiveMap = function () {
     mapBlock.classList.add('map--faded');
 
-    mainMapPin.addEventListener('mousedown', getActiveMode);
+    mainMapPin.addEventListener('mousedown', onMainPinMousedown);
 
     unactiveForm(mainMapPin);
     resetFiltersForm();
@@ -196,7 +198,6 @@
 
   window.map = {
     activeMap: activeMap,
-    deactiveMap: deactiveMap,
-    getActiveMode: getActiveMode
+    deactiveMap: deactiveMap
   };
 })();

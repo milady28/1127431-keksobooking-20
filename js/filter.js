@@ -40,7 +40,7 @@
 
     if (housingPrice.value !== 'any' &&
       (housingPrice.value === 'low' && card.offer.price >= PRICE_LIMIT.low
-      || housingPrice.value === 'middle' && (card.offer.price <= PRICE_LIMIT.low || card.offer.price >= PRICE_LIMIT.high)
+      || housingPrice.value === 'middle' && (card.offer.price < PRICE_LIMIT.low || card.offer.price > PRICE_LIMIT.high)
       || housingPrice.value === 'high' && card.offer.price <= PRICE_LIMIT.high)
     ) {
       return false;
